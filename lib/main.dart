@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:projet_todo_list/createToDo.dart';
 import 'package:projet_todo_list/todo.dart';
 import 'package:projet_todo_list/todoItem.dart';
 import 'package:projet_todo_list/todoList.dart';
@@ -45,23 +46,7 @@ class MyApp extends StatelessWidget {
                 ],
               ),
             ),
-            Align(
-              alignment: Alignment.bottomRight,
-              child: Container(
-              margin: const EdgeInsets.only(
-                bottom: 20,
-                right: 20,
-              ),
-              child: ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: buttonColor,
-                  minimumSize:  const Size(60, 60),
-                  elevation: 10,
-              ),
-                child: const Text('+', style: TextStyle(color: insideButtonColor, fontSize: 40),)),
-            ),
-            )
+            createToDo().build(context)
           ]
       ),
       ),
