@@ -1,11 +1,11 @@
-class ToDo {
+class Todo {
   static int _cpt = 0;
   int _id = 0;
-  String? _message;
+  String _message = "";
   bool _isDone = false;
   bool _isImportant = false;
 
-  ToDo(String message, [bool isDone = false, bool isImportant = false]) {
+  Todo(String message, [bool isDone = false, bool isImportant = false]) {
     _id = _cpt++;
     _message = message;
     _isDone = isDone;
