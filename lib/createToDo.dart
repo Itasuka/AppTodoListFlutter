@@ -4,7 +4,7 @@ import 'package:projet_todo_list/todoList.dart';
 
 class CreateToDo extends StatefulWidget {
   final Function() refresh;
-  CreateToDo({Key? key, required this.refresh}) : super(key: key);
+  const CreateToDo({Key? key, required this.refresh}) : super(key: key);
 
   @override
   State<CreateToDo> createState() => _CreateToDoState();
@@ -23,12 +23,11 @@ class _CreateToDoState extends State<CreateToDo> {
               left: 20,
               bottom: 20,
             ),
-                child: TextField(
-                    controller: textController,
-                    decoration:
-                        const InputDecoration(hintText: "Titre de la tâche"
-                            //border: InputBorder.none
-                            ))),
+            child: TextField(
+                controller: textController,
+                decoration: const InputDecoration(hintText: "Titre de la tâche"
+                    //border: InputBorder.none
+                    ))),
       ),
       Container(
         alignment: Alignment.bottomRight,
@@ -59,8 +58,45 @@ class _CreateToDoState extends State<CreateToDo> {
     if (titre.isNotEmpty) {
       TodoList().add(titre);
       widget.refresh();
+      titre = "";
+      setState(() {
+        textController.clear();
+      });
     } else {
-      print("Vous devez d'abord entrer un titre !"); //TODO FAIRE POPUP
+      showDialog(
+          barrierDismissible: true,
+          context: context,
+          builder: (context) {
+            return Dialog(
+                child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Attention',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  const Text(
+                    'Vous devez d\'abord entrer un titre !',
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop(); // Ferme le dialog
+                    },
+                    child: const Text('OK'),
+                  ),
+                ],
+              ),
+            ));
+          });
     }
   }
 }

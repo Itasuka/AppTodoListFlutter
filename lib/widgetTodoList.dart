@@ -15,23 +15,21 @@ class WidgetTodoList extends StatefulWidget {
 class _WidgetTodoListState extends State<WidgetTodoList> {
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children:[
-        Container(
-          margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
-          child: ListView.builder(
-            itemCount: widget._widgetTodoList.length,
-            itemBuilder: (_, i) => widget._widgetTodoList[i],
-          ),
+    return Stack(children: [
+      Container(
+        margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
+        child: ListView.builder(
+          itemCount: widget._widgetTodoList.length,
+          itemBuilder: (_, i) => widget._widgetTodoList[i],
         ),
-        CreateToDo(refresh: affichage)
-      ]);
+      ),
+      CreateToDo(refresh: affichage)
+    ]);
   }
 
-  void affichage(){
-    setState((){ 
+  void affichage() {
+    setState(() {
       widget._widgetTodoList = TodoList().afficherList();
     });
   }
 }
-  
