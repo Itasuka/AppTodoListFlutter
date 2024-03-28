@@ -19,8 +19,9 @@ class _WidgetTodoListState extends State<WidgetTodoList> {
       children:[
         Container(
           margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
-          child: ListView(
-             children: widget._widgetTodoList,
+          child: ListView.builder(
+            itemCount: widget._widgetTodoList.length,
+            itemBuilder: (_, i) => widget._widgetTodoList[i],
           ),
         ),
         CreateToDo(refresh: affichage)
