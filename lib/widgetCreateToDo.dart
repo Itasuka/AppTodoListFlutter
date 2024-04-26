@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:projet_todo_list/colors.dart';
 import 'package:projet_todo_list/todoList.dart';
 
-class CreateToDo extends StatefulWidget {
+class WidgetCreateToDo extends StatefulWidget {
   final Function() refresh;
-  const CreateToDo({Key? key, required this.refresh}) : super(key: key);
+  const WidgetCreateToDo({Key? key, required this.refresh}) : super(key: key);
 
   @override
-  State<CreateToDo> createState() => _CreateToDoState();
+  State<WidgetCreateToDo> createState() => _WidgetCreateToDoState();
 }
 
-class _CreateToDoState extends State<CreateToDo> {
+class _WidgetCreateToDoState extends State<WidgetCreateToDo> {
   final textController = TextEditingController();
   String titre = "";
   @override
@@ -56,7 +56,7 @@ class _CreateToDoState extends State<CreateToDo> {
   void creerTache() {
     String titre = textController.text;
     if (titre.isNotEmpty) {
-      TodoList().add(titre);
+      TodoList().add(titre, widget.refresh);
       widget.refresh();
       titre = "";
       setState(() {

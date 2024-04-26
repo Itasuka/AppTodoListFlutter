@@ -1,3 +1,5 @@
+import 'package:projet_todo_list/todoList.dart';
+
 class Todo {
   static int _cpt = 0;
   int _id = 0;

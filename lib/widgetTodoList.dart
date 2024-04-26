@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:projet_todo_list/createToDo.dart';
+import 'package:projet_todo_list/widgetCreateToDo.dart';
 import 'package:projet_todo_list/todoList.dart';
 import 'package:projet_todo_list/widgetTodo.dart';
 
@@ -17,13 +17,13 @@ class _WidgetTodoListState extends State<WidgetTodoList> {
   Widget build(BuildContext context) {
     return Stack(children: [
       Container(
-        margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
+        margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
         child: ListView.builder(
           itemCount: widget._widgetTodoList.length,
           itemBuilder: (_, i) => widget._widgetTodoList[i],
         ),
       ),
-      CreateToDo(refresh: affichage)
+      WidgetCreateToDo(refresh: affichage)
     ]);
   }
 

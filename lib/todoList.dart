@@ -11,13 +11,13 @@ class TodoList {
 
   TodoList.internal();
 
-  void add(String message) {
+  void add(String message, Function() refresh) {
     Todo todoo = Todo(message);
-    _widgetTodoList.add(WidgetTodo(todo: todoo, supprimer: remove));
+    _widgetTodoList.add(WidgetTodo(todo: todoo, refresh: refresh));
   }
 
   void remove(Todo todo) {
-    _widgetTodoList.remove(todo);
+    _widgetTodoList.removeWhere((widgetTodo) => widgetTodo.todo.getId() == todo.getId());
   }
 
   List<Todo> getList() {
