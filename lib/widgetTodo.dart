@@ -37,29 +37,7 @@ class _WidgetToDoState extends State<WidgetTodo> {
             },
             confirmDismiss: (direction) async {
               if (direction == DismissDirection.endToStart) {
-                bool dismiss = false;
-                await showDialog(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialog(
-                        title: const Text("Voulez-vous vraiment supprimer cette tache?"),
-                        actions: [
-                          TextButton(
-                              onPressed: () {
-                                dismiss = true;
-                                Navigator.pop(context);
-                              },
-                              child: const Text("Oui")),
-                          TextButton(
-                              onPressed: () {
-                                dismiss = false;
-                                Navigator.pop(context);
-                              },
-                              child: const Text("Non")),
-                        ],
-                      );
-                    });
-                return dismiss;
+                return askForDelete();
               } else{
                 return true;
               }
@@ -125,9 +103,11 @@ class _WidgetToDoState extends State<WidgetTodo> {
                 ),
               ),
               trailing: IconButton(
-                onPressed: () {
-                  TodoList().remove(widget.todo);
-                  widget.refresh();
+                onPressed: () async {
+                  if(await askForDelete()) {
+                    TodoList().remove(widget.todo);
+                    widget.refresh();
+                  }
                 },
                 icon: const Icon(
                   Icons.delete,
@@ -139,5 +119,34 @@ class _WidgetToDoState extends State<WidgetTodo> {
         )
       )
     );
+  }
+
+  Future<bool> askForDelete() async {
+    bool dismiss = false;
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text("Voulez-vous vraiment supprimer cette tache?"),
+          actions: [
+            TextButton(
+              onPressed: () {
+                dismiss = true;
+                Navigator.pop(context);
+              },
+              child: const Text("Oui"),
+            ),
+            TextButton(
+              onPressed: () {
+                dismiss = false;
+                Navigator.pop(context);
+              },
+              child: const Text("Non"),
+            ),
+          ],
+        );
+      },
+    );
+    return dismiss;
   }
 }
