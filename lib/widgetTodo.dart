@@ -18,50 +18,57 @@ class _WidgetToDoState extends State<WidgetTodo> {
   Widget build(BuildContext context) {
     return
       Container(
-        margin: const EdgeInsets.only(bottom: 10),
-        child:ClipRRect(
+        decoration: const BoxDecoration(
+            border: Border(
+              bottom: BorderSide(
+                color: separator,
+                width: 1.0,
+              )
+            )
+        ),
         child: Dismissible(
-            direction: DismissDirection.horizontal,
-            key: UniqueKey(),
-            resizeDuration: null,
-            onDismissed: (DismissDirection direction) {
-              if (direction == DismissDirection.endToStart) {
-                TodoList().remove(widget.todo);
+          direction: DismissDirection.horizontal,
+          key: UniqueKey(),
+          resizeDuration: null,
+          onDismissed: (DismissDirection direction) {
+            if (direction == DismissDirection.endToStart) {
+              TodoList().remove(widget.todo);
+              widget.refresh();
+            }
+            if (direction == DismissDirection.startToEnd) {
+              setState(() {
+                widget.todo.changeIsImportant();
                 widget.refresh();
-              }
-              if (direction == DismissDirection.startToEnd) {
-                setState(() {
-                  widget.todo.changeIsImportant();
-                });
-              }
-            },
-            confirmDismiss: (direction) async {
-              if (direction == DismissDirection.endToStart) {
-                return askForDelete();
-              } else{
-                return true;
-              }
-            },
-            background: const ColoredBox(
-              color: starButton,
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Padding(
-                  padding: EdgeInsets.all(16.0),
-                  child: Icon(Icons.star, color: iconOnColor),
-                ),
+              });
+            }
+          },
+          confirmDismiss: (direction) async {
+            if (direction == DismissDirection.endToStart) {
+              return askForDelete();
+            } else{
+              return true;
+            }
+          },
+          background: const ColoredBox(
+            color: starButton,
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: EdgeInsets.all(16.0),
+                child: Icon(Icons.star, color: iconOnColor),
               ),
             ),
-            secondaryBackground: const ColoredBox(
-              color: deleteButton,
-              child: Align(
-                alignment: Alignment.centerRight,
-                child: Padding(
-                  padding: EdgeInsets.all(16.0),
-                  child: Icon(Icons.delete, color: iconOnColor),
-                ),
+          ),
+          secondaryBackground: const ColoredBox(
+            color: deleteButton,
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: Padding(
+                padding: EdgeInsets.all(16.0),
+                child: Icon(Icons.delete, color: iconOnColor),
               ),
             ),
+          ),
           child:Container(
             color: backgroundColor,
             child: ListTile(
@@ -70,8 +77,8 @@ class _WidgetToDoState extends State<WidgetTodo> {
                 IconButton(
                     onPressed: () {
                       setState(() {
-                        widget.todo
-                            .changeIsDone();
+                        widget.todo.changeIsDone();
+                        widget.refresh();
                       });
                     },
                     icon: Icon(
@@ -84,6 +91,7 @@ class _WidgetToDoState extends State<WidgetTodo> {
                   onPressed: () {
                     setState(() {
                       widget.todo.changeIsImportant();
+                      widget.refresh();
                     });
                   },
                   icon: Icon(
@@ -117,8 +125,7 @@ class _WidgetToDoState extends State<WidgetTodo> {
             ),
           )
         )
-      )
-    );
+      );
   }
 
   Future<bool> askForDelete() async {
@@ -127,7 +134,7 @@ class _WidgetToDoState extends State<WidgetTodo> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text("Voulez-vous vraiment supprimer cette tache?"),
+          title: const Text("Voulez-vous vraiment supprimer cette tâche?"),
           actions: [
             TextButton(
               onPressed: () {

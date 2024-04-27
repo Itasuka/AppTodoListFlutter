@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:projet_todo_list/widgetAppBar.dart';
 import 'package:projet_todo_list/widgetCreateToDo.dart';
 import 'package:projet_todo_list/todoList.dart';
 import 'package:projet_todo_list/widgetTodo.dart';
@@ -15,16 +17,20 @@ class WidgetTodoList extends StatefulWidget {
 class _WidgetTodoListState extends State<WidgetTodoList> {
   @override
   Widget build(BuildContext context) {
-    return Stack(children: [
-      Container(
-        margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-        child: ListView.builder(
-          itemCount: widget._widgetTodoList.length,
-          itemBuilder: (_, i) => widget._widgetTodoList[i],
+    return Scaffold(
+      appBar: WidgetAppBar(refresh: affichage),
+      body: Column(
+      children: [
+        Expanded(
+          child: ListView.builder(
+            itemCount: widget._widgetTodoList.length,
+            itemBuilder: (_, i) => widget._widgetTodoList[i],
+          ),
         ),
-      ),
-      WidgetCreateToDo(refresh: affichage)
-    ]);
+        WidgetCreateToDo(refresh: affichage)
+        ]
+      )
+    );
   }
 
   void affichage() {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:projet_todo_list/widgetAppBar.dart';
 import 'package:projet_todo_list/widgetTodoList.dart';
 import './colors.dart';
 
@@ -13,21 +14,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        appBar: AppBar(
-          backgroundColor: backgroundColor,
-          title: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-            IconButton(
-              onPressed: () {
-                print("coucoucoufeur");
-              }, //TODO ON CLICK
-              tooltip: "Paramètres",
-              icon: const Icon(Icons.settings, color: textColor),
-            ),
-          ]),
-        ),
-        body: WidgetTodoList(),
-      ),
+      home: WidgetTodoList(),
     );
   }
+
 }
