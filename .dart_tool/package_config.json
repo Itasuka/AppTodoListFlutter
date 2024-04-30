@@ -63,9 +63,15 @@
     },
     {
       "name": "flutter_lints",
-      "rootUri": "file:///C:/Users/Maxime/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_lints-2.0.3",
+      "rootUri": "file:///C:/Users/Maxime/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_lints-3.0.2",
       "packageUri": "lib/",
-      "languageVersion": "2.19"
+      "languageVersion": "3.1"
+    },
+    {
+      "name": "flutter_map",
+      "rootUri": "file:///C:/Users/Maxime/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_map-6.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
     },
     {
       "name": "flutter_test",
@@ -75,9 +81,9 @@
     },
     {
       "name": "http",
-      "rootUri": "file:///C:/Users/Maxime/AppData/Local/Pub/Cache/hosted/pub.dev/http-0.13.6",
+      "rootUri": "file:///C:/Users/Maxime/AppData/Local/Pub/Cache/hosted/pub.dev/http-1.2.1",
       "packageUri": "lib/",
-      "languageVersion": "2.19"
+      "languageVersion": "3.3"
     },
     {
       "name": "http_parser",
@@ -87,9 +93,15 @@
     },
     {
       "name": "intl",
-      "rootUri": "file:///C:/Users/Maxime/AppData/Local/Pub/Cache/hosted/pub.dev/intl-0.17.0",
+      "rootUri": "file:///C:/Users/Maxime/AppData/Local/Pub/Cache/hosted/pub.dev/intl-0.19.0",
       "packageUri": "lib/",
-      "languageVersion": "2.12"
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "latlong2",
+      "rootUri": "file:///C:/Users/Maxime/AppData/Local/Pub/Cache/hosted/pub.dev/latlong2-0.9.1",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
     },
     {
       "name": "leak_tracker",
@@ -111,15 +123,27 @@
     },
     {
       "name": "lints",
-      "rootUri": "file:///C:/Users/Maxime/AppData/Local/Pub/Cache/hosted/pub.dev/lints-2.1.1",
+      "rootUri": "file:///C:/Users/Maxime/AppData/Local/Pub/Cache/hosted/pub.dev/lints-3.0.0",
       "packageUri": "lib/",
       "languageVersion": "3.0"
     },
     {
-      "name": "lottie",
-      "rootUri": "file:///C:/Users/Maxime/AppData/Local/Pub/Cache/hosted/pub.dev/lottie-1.4.3",
+      "name": "lists",
+      "rootUri": "file:///C:/Users/Maxime/AppData/Local/Pub/Cache/hosted/pub.dev/lists-1.0.1",
       "packageUri": "lib/",
-      "languageVersion": "2.18"
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "logger",
+      "rootUri": "file:///C:/Users/Maxime/AppData/Local/Pub/Cache/hosted/pub.dev/logger-2.2.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
+      "name": "lottie",
+      "rootUri": "file:///C:/Users/Maxime/AppData/Local/Pub/Cache/hosted/pub.dev/lottie-3.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.2"
     },
     {
       "name": "matcher",
@@ -146,10 +170,28 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "mgrs_dart",
+      "rootUri": "file:///C:/Users/Maxime/AppData/Local/Pub/Cache/hosted/pub.dev/mgrs_dart-2.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "path",
       "rootUri": "file:///C:/Users/Maxime/AppData/Local/Pub/Cache/hosted/pub.dev/path-1.9.0",
       "packageUri": "lib/",
       "languageVersion": "3.0"
+    },
+    {
+      "name": "polylabel",
+      "rootUri": "file:///C:/Users/Maxime/AppData/Local/Pub/Cache/hosted/pub.dev/polylabel-1.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.13"
+    },
+    {
+      "name": "proj4dart",
+      "rootUri": "file:///C:/Users/Maxime/AppData/Local/Pub/Cache/hosted/pub.dev/proj4dart-2.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
     },
     {
       "name": "sky_engine",
@@ -200,6 +242,12 @@
       "languageVersion": "2.17"
     },
     {
+      "name": "unicode",
+      "rootUri": "file:///C:/Users/Maxime/AppData/Local/Pub/Cache/hosted/pub.dev/unicode-0.3.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "vector_math",
       "rootUri": "file:///C:/Users/Maxime/AppData/Local/Pub/Cache/hosted/pub.dev/vector_math-2.1.4",
       "packageUri": "lib/",
@@ -212,13 +260,25 @@
       "languageVersion": "3.0"
     },
     {
+      "name": "web",
+      "rootUri": "file:///C:/Users/Maxime/AppData/Local/Pub/Cache/hosted/pub.dev/web-0.5.1",
+      "packageUri": "lib/",
+      "languageVersion": "3.3"
+    },
+    {
+      "name": "wkt_parser",
+      "rootUri": "file:///C:/Users/Maxime/AppData/Local/Pub/Cache/hosted/pub.dev/wkt_parser-2.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "projet_todo_list",
       "rootUri": "../",
       "packageUri": "lib/",
       "languageVersion": "3.2"
     }
   ],
-  "generated": "2024-04-30T02:29:29.401036Z",
+  "generated": "2024-04-30T15:42:56.529131Z",
   "generator": "pub",
   "generatorVersion": "3.3.4"
 }

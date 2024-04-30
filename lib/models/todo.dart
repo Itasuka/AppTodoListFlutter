@@ -13,7 +13,7 @@ class Todo {
   String _description = "";
   bool _isDone = false;
   bool _isImportant = false;
-  String _city = "reims";
+  String _city = "";
 
   Todo(String message, [bool isDone = false, bool isImportant = false]) {
     _id = _cpt++;
@@ -27,11 +27,15 @@ class Todo {
     return _id;
   }
 
+  void setTitle(String title){
+    _title = title;
+  }
+
   String getTitle() {
     return _title;
   }
 
-  void setDate(DateTime date){
+  void setDate(DateTime? date){
     _date = date;
   }
 
@@ -40,6 +44,10 @@ class Todo {
       return "";
     }
     return DateFormat('dd/MM/yyyy').format(_date as DateTime);
+  }
+
+  DateTime? getDateTime(){
+    return _date;
   }
 
   void setDescription(String description){

@@ -1,12 +1,16 @@
-import 'dart:ffi';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart' as flutter_map;
+import 'package:latlong2/latlong.dart';
 import 'package:lottie/lottie.dart';
 import 'package:projet_todo_list/colors.dart';
 import 'package:projet_todo_list/models/todo.dart';
 import 'package:projet_todo_list/models/todoList.dart';
+import 'package:projet_todo_list/pages/widgetMap.dart';
 
 import '../models/weather.dart';
+import 'widgetEditTodo.dart';
 
 class WidgetTodo extends StatefulWidget {
   const WidgetTodo({Key? key, required this.todo, required this.refresh})
@@ -107,15 +111,31 @@ class _WidgetToDoState extends State<WidgetTodo> {
                     ),
                   )
                 ]),
-                title: Text(
-                  overflow: TextOverflow.ellipsis,
-                  widget.todo.getTitle() ?? "",
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: textColor,
-                    decoration:
-                        widget.todo.getIsDone() ? TextDecoration.lineThrough : null,
-                  ),
+                title: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children:[
+                    Text(
+                      overflow: TextOverflow.ellipsis,
+                      widget.todo.getTitle() ?? "",
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: textColor,
+                        fontWeight: FontWeight.bold,
+                        decoration:
+                            widget.todo.getIsDone() ? TextDecoration.lineThrough : null,
+                      ),
+                    ),
+                    if (widget.todo.getDateTime() != null)
+                      Text(
+                        widget.todo.getDate(),
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: textColor,
+                          decoration: widget.todo.getIsDone() ? TextDecoration.lineThrough : null,
+                        ),
+                      ),
+                  ]
                 ),
                 trailing: Row(mainAxisSize: MainAxisSize.min, children: [
                   IconButton(
@@ -133,7 +153,10 @@ class _WidgetToDoState extends State<WidgetTodo> {
                   IconButton(
                     icon: const Icon(Icons.edit),
                     onPressed: () {
-                      //todo
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => WidgetEditTodo(todo: widget.todo, refresh: affichage)),
+                      );
                     },
                   ),
                 ]),
@@ -198,6 +221,7 @@ class _WidgetToDoState extends State<WidgetTodo> {
 
   Widget setWidgetDetail(Weather? _weather) {
     List<Widget> widgetsList = [];
+    double mapSize = min(MediaQuery.of(context).size.width * 0.5, MediaQuery.of(context).size.height * 0.5);
 
     if (widget.todo.getDescription() != "") {
       widgetsList.add(
@@ -223,7 +247,7 @@ class _WidgetToDoState extends State<WidgetTodo> {
           text: TextSpan(
             children: [
               const TextSpan(
-                text: 'Date: ',
+                text: 'Date d\'échéance: ',
                 style: TextStyle(fontWeight: FontWeight.bold, color: textColor),
               ),
               TextSpan(
@@ -254,11 +278,59 @@ class _WidgetToDoState extends State<WidgetTodo> {
       );
     }
     if(_weather != null){
+      widgetsList.add(const SizedBox(height: 16),);
       widgetsList.add(
-      Center(
+       Center(
         child:Column(
           children: <Widget>[
-            Container(
+            SizedBox(
+              width: mapSize,
+              height: mapSize,
+              child: Stack(
+                children: [
+                  flutter_map.FlutterMap(
+                  options: flutter_map.MapOptions(
+                    initialCenter: LatLng(_weather.lat, _weather.lon),
+                    initialZoom: 11,
+
+                  ),
+                  children: [
+                    flutter_map.TileLayer(
+                      urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                      userAgentPackageName: 'dev.fleaflet.flutter_map.example',
+                    ),
+                    flutter_map.MarkerLayer(markers: [
+                      flutter_map.Marker(
+                        point:LatLng(_weather.lat, _weather.lon),
+                        width: 60,
+                        height: 60,
+                        alignment: Alignment.center,
+                        child: const Icon(
+                          Icons.location_pin,
+                          size: 40,
+                          color: Colors.red,
+                        )
+                      )
+                    ]),
+                  ],
+                ),
+                Positioned(
+                  bottom: 5,
+                  right: 5,
+                  child: FloatingActionButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => WidgetMap(weather: _weather, title: widget.todo.getTitle(),)),
+                      );
+                    },
+                    mini: true,
+                    child: Icon(Icons.fullscreen),
+                  ),
+                ),
+              ])
+            ),
+            SizedBox(
               height: 80,
               width: 80,
               child: Lottie.asset(
@@ -267,11 +339,11 @@ class _WidgetToDoState extends State<WidgetTodo> {
             ),
             Text("Actuel: ${_weather?.temp ?? 0}°C",
               softWrap: true,
-              style: const TextStyle(fontWeight: FontWeight.bold, color: textColor),
+              style: TextStyle(fontWeight: FontWeight.bold, color: textColor),
             ),
             Text("Min: ${_weather?.minTemp ?? 0}°C | Max: ${_weather?.maxTemp ?? 0}°C",
               softWrap: true,
-              style: const TextStyle(fontWeight: FontWeight.bold, color: textColor),
+              style: TextStyle(fontWeight: FontWeight.bold, color: textColor),
             )
           ]
           )
@@ -280,10 +352,8 @@ class _WidgetToDoState extends State<WidgetTodo> {
     }
 
     if(widgetsList.isEmpty){
-      return Container(
-        child: const Text("Vous n'avez pas encore édité cette activité. \n"
-            "Une fois cela fait, vous aurez toutes les informations renseignées qui apparaîtront ici."),
-      );
+      return const Text("Vous n'avez pas encore édité cette activité. \n"
+          "Une fois cela fait, vous aurez toutes les informations renseignées qui apparaîtront ici.");
     }
     else {
       return Column(
@@ -308,26 +378,37 @@ class _WidgetToDoState extends State<WidgetTodo> {
     return showDialog(
       context: context,
       builder: (context) {
-        return StatefulBuilder(
-          builder: (context, setState) {
-            return AlertDialog(
-              title: Row(
-                children: [
-                  Expanded(
-                    child: Text(widget.todo.getTitle()),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.edit),
-                    onPressed: () {
-                    },
-                  ),
-                ],
-              ),
-              content: setWidgetDetail(_weather),
-            );
-          }
+        return
+          AlertDialog(
+            title: Row(
+              children: [
+                Expanded(
+                  child: Text(widget.todo.getTitle()),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.edit),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => WidgetEditTodo(todo: widget.todo, refresh: affichage)),
+                    );
+                  },
+                ),
+              ],
+            ),
+            content: SizedBox(
+              width: MediaQuery.of(context).size.width * 0.7,
+              height: MediaQuery.of(context).size.height * 0.7,
+              child:SingleChildScrollView(child:setWidgetDetail(_weather)),
+            )
         );
       },
     );
+  }
+
+  void affichage() {
+    setState(() {
+      widget.todo;
+    });
   }
 }
