@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:projet_todo_list/widgetAppBar.dart';
-import 'package:projet_todo_list/widgetTodoList.dart';
-import './colors.dart';
+import 'package:projet_todo_list/pages/widgetAppBar.dart';
+import 'package:projet_todo_list/pages/widgetTodoList.dart';
+import 'colors.dart';
 
 void main() {
   runApp(const MyApp());

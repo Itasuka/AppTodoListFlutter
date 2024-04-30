@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:projet_todo_list/todoList.dart';
-import 'package:projet_todo_list/widgetTodoList.dart';
+import 'package:projet_todo_list/models/todoList.dart';
 
-import 'colors.dart';
+import '../colors.dart';
 
 class WidgetAppBar extends StatelessWidget implements PreferredSizeWidget{
   WidgetAppBar({Key? key, required this.refresh}) : super(key: key);
@@ -23,7 +22,7 @@ class WidgetAppBar extends StatelessWidget implements PreferredSizeWidget{
             parameterPopUp(context);
           },
           tooltip: "Paramètres",
-          icon: const Icon(Icons.settings, color: textColor),
+          icon: const Icon(Icons.settings, color: insideButtonColor),
         ),
       ]),
     );

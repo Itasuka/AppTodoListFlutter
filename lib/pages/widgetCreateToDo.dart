@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:projet_todo_list/colors.dart';
-import 'package:projet_todo_list/todoList.dart';
+import 'package:projet_todo_list/models/todoList.dart';
 
 class WidgetCreateToDo extends StatefulWidget {
   final Function() refresh;

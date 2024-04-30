@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:projet_todo_list/widgetAppBar.dart';
-import 'package:projet_todo_list/widgetCreateToDo.dart';
-import 'package:projet_todo_list/todoList.dart';
-import 'package:projet_todo_list/widgetTodo.dart';
+import 'package:projet_todo_list/pages/widgetAppBar.dart';
+import 'package:projet_todo_list/pages/widgetCreateToDo.dart';
+import 'package:projet_todo_list/models/todoList.dart';
+import 'package:projet_todo_list/pages/widgetTodo.dart';
 
 class WidgetTodoList extends StatefulWidget {
   WidgetTodoList({Key? key}) : super(key: key);

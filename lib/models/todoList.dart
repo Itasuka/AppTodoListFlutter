@@ -1,5 +1,5 @@
-import 'package:projet_todo_list/todo.dart';
-import 'package:projet_todo_list/widgetTodo.dart';
+import 'package:projet_todo_list/models/todo.dart';
+import 'package:projet_todo_list/pages/widgetTodo.dart';
 
 class TodoList {
   final List<WidgetTodo> _widgetTodoList = List.empty(growable: true);
@@ -34,9 +34,6 @@ class TodoList {
   }
 
   List<WidgetTodo> afficherList() {
-    print("start: " + _sortByIsImportant.toString());
-    print("finish: " + _sortByIsDone.toString());
-    print("date: " + _sortById.toString());
     sortTodoList();
     return _widgetTodoList;
   }
