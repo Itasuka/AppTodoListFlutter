@@ -13,7 +13,7 @@ class Todo {
   String _description = "";
   bool _isDone = false;
   bool _isImportant = false;
-  String _city = "";
+  String _city = "reims";
 
   Todo(String message, [bool isDone = false, bool isImportant = false]) {
     _id = _cpt++;

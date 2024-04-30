@@ -259,13 +259,8 @@ class _WidgetToDoState extends State<WidgetTodo> {
         child:Column(
           children: <Widget>[
             Container(
-              decoration: const BoxDecoration(
-                  color: Colors.blueGrey,
-                  borderRadius: BorderRadius.all(Radius.circular(20))
-              ),
               height: 80,
               width: 80,
-              clipBehavior: Clip.antiAlias,
               child: Lottie.asset(
                 weatherAnimation(_weather?.condition),
               ),
@@ -324,7 +319,6 @@ class _WidgetToDoState extends State<WidgetTodo> {
                   IconButton(
                     icon: const Icon(Icons.edit),
                     onPressed: () {
-
                     },
                   ),
                 ],
