@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:projet_todo_list/colors.dart';
@@ -194,6 +196,109 @@ class _WidgetToDoState extends State<WidgetTodo> {
     }
   }
 
+  Widget setWidgetDetail(Weather? _weather) {
+    List<Widget> widgetsList = [];
+
+    if (widget.todo.getDescription() != "") {
+      widgetsList.add(
+        RichText(
+          text: TextSpan(
+            children: [
+              const TextSpan(
+                text: 'Description: ',
+                style: TextStyle(fontWeight: FontWeight.bold, color: textColor),
+              ),
+              TextSpan(
+                text: widget.todo.getDescription(),
+                style: const TextStyle(color: textColor),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+    if (widget.todo.getDate() != ""){
+      widgetsList.add(
+        RichText(
+          text: TextSpan(
+            children: [
+              const TextSpan(
+                text: 'Date: ',
+                style: TextStyle(fontWeight: FontWeight.bold, color: textColor),
+              ),
+              TextSpan(
+                text: widget.todo.getDate(),
+                style: const TextStyle(color: textColor),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+    if(widget.todo.getCity() != ""){
+      widgetsList.add(
+        RichText(
+          text: TextSpan(
+            children: [
+              const TextSpan(
+                text: 'Ville: ',
+                style: TextStyle(fontWeight: FontWeight.bold, color: textColor),
+              ),
+              TextSpan(
+                text: widget.todo.getCity(),
+                style: const TextStyle(color: textColor),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+    if(_weather != null){
+      widgetsList.add(
+      Center(
+        child:Column(
+          children: <Widget>[
+            Container(
+              decoration: const BoxDecoration(
+                  color: Colors.blueGrey,
+                  borderRadius: BorderRadius.all(Radius.circular(20))
+              ),
+              height: 80,
+              width: 80,
+              clipBehavior: Clip.antiAlias,
+              child: Lottie.asset(
+                weatherAnimation(_weather?.condition),
+              ),
+            ),
+            Text("Actuel: ${_weather?.temp ?? 0}°C",
+              softWrap: true,
+              style: const TextStyle(fontWeight: FontWeight.bold, color: textColor),
+            ),
+            Text("Min: ${_weather?.minTemp ?? 0}°C | Max: ${_weather?.maxTemp ?? 0}°C",
+              softWrap: true,
+              style: const TextStyle(fontWeight: FontWeight.bold, color: textColor),
+            )
+          ]
+          )
+        ),
+      );
+    }
+
+    if(widgetsList.isEmpty){
+      return Container(
+        child: const Text("Vous n'avez pas encore édité cette activité. \n"
+            "Une fois cela fait, vous aurez toutes les informations renseignées qui apparaîtront ici."),
+      );
+    }
+    else {
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: widgetsList,
+      );
+    }
+  }
+
   Future todoDetail() async{
     Weather? _weather;
     try {
@@ -224,80 +329,7 @@ class _WidgetToDoState extends State<WidgetTodo> {
                   ),
                 ],
               ),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  RichText(
-                    text: TextSpan(
-                      children: [
-                        const TextSpan(
-                          text: 'Description: ',
-                          style: TextStyle(fontWeight: FontWeight.bold, color: textColor),
-                        ),
-                        TextSpan(
-                          text: widget.todo.getDescription(),
-                          style: const TextStyle(color: textColor),
-                        ),
-                      ],
-                    ),
-                  ),
-                  RichText(
-                    text: TextSpan(
-                      children: [
-                        const TextSpan(
-                          text: 'Date: ',
-                          style: TextStyle(fontWeight: FontWeight.bold, color: textColor),
-                        ),
-                        TextSpan(
-                          text: widget.todo.getDate(),
-                          style: const TextStyle(color: textColor),
-                        ),
-                      ],
-                    ),
-                  ),
-                  RichText(
-                    text: TextSpan(
-                      children: [
-                        const TextSpan(
-                          text: 'Ville: ',
-                          style: TextStyle(fontWeight: FontWeight.bold, color: textColor),
-                        ),
-                        TextSpan(
-                          text: widget.todo.getCity(),
-                          style: const TextStyle(color: textColor),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Center(
-                    child:Column(
-                      children: <Widget>[
-                        Container(
-                          decoration: const BoxDecoration(
-                              color: Colors.blueGrey,
-                              borderRadius: BorderRadius.all(Radius.circular(20))
-                          ),
-                          height: 80,
-                          width: 80,
-                          clipBehavior: Clip.antiAlias,
-                          child: Lottie.asset(
-                            weatherAnimation(_weather?.condition),
-                          ),
-                        ),
-                        Text("Actuel: ${_weather?.temp.round() ?? 0}°C",
-                          softWrap: true,
-                          style: const TextStyle(fontWeight: FontWeight.bold, color: textColor),
-                        ),
-                        Text("Min: ${_weather?.temp.round() ?? 0}°C | Max: ${_weather?.temp.round() ?? 0}°C",
-                          softWrap: true,
-                          style: const TextStyle(fontWeight: FontWeight.bold, color: textColor),
-                        )
-                      ]
-                    )
-                  )
-                ],
-              ),
+              content: setWidgetDetail(_weather),
             );
           }
         );
