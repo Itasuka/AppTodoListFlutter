@@ -1,13 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:projet_todo_list/models/todoList.dart';
 
 import '../colors.dart';
 import '../models/todo.dart';
 
 class WidgetEditTodo extends StatefulWidget {
   final Todo todo;
-  final Function refresh;
+  final Function() refresh;
 
   const WidgetEditTodo({Key? key, required this.todo, required this.refresh}) : super(key: key);
 
@@ -121,13 +122,16 @@ class _WidgetEditTodoState extends State<WidgetEditTodo> {
                           foregroundColor: buttonColor, backgroundColor: insideButtonColor,
                         ),
                         onPressed: () {
-                          if (_formKey.currentState!.validate()) { // Vérifier la validation du formulaire
-                            widget.todo.setTitle(_title.text);
-                            widget.todo.setDescription(_description.text);
-                            widget.todo.setCity(_city.text);
-                            widget.todo.setDate(_date);
-                            widget.refresh();
+                          if (_formKey.currentState!.validate()) {
+                            TodoList().update(
+                                widget.todo,
+                                _title.text,
+                                _description.text,
+                                _city.text,
+                                _date,
+                                widget.refresh);
                             Navigator.pop(context);
+                            widget.refresh;
                           }
                         },
                         child: const Text('Valider'),

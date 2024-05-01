@@ -7,70 +7,67 @@ import 'weather.dart';
 
 class Todo {
   static int _cpt = 0;
-  int _id = 0;
-  String _title = "";
-  DateTime? _date;
-  String _description = "";
-  bool _isDone = false;
-  bool _isImportant = false;
-  String _city = "";
+  int id = 0;
+  String title = "";
+  DateTime? date;
+  String description = "";
+  bool isDone = false;
+  bool isImportant = false;
+  String city = "";
 
-  Todo(String message, [bool isDone = false, bool isImportant = false]) {
-    _id = _cpt++;
-    _title = message;
-    _isDone = isDone;
-    _isImportant = isImportant;
+  Todo.db({
+    required this.id,
+    required this.title,
+    required this.description,
+    required this.city,
+    required this.date,
+    required this.isDone,
+    required this.isImportant
+  });
 
-  }
+  factory Todo.fromDatabase(Map<String, dynamic> map) => Todo.db(
+    id: map['id']?.toInt() ?? 0,
+    title: map['title'] ?? '',
+    description: map['description'] ?? '',
+    city: map['city'] ?? '',
+    date: map['date'] != null
+        ? DateFormat('dd/MM/yyyy').parse(map['date'])
+        : null,
+    isDone: map['isDone'] != null ? map['isDone'].toInt() == 1 : false,
+    isImportant: map['isImportant'] != null ? map['isImportant'].toInt() == 1 : false,
+  );
 
   int getId() {
-    return _id;
-  }
-
-  void setTitle(String title){
-    _title = title;
+    return id;
   }
 
   String getTitle() {
-    return _title;
-  }
-
-  void setDate(DateTime? date){
-    _date = date;
+    return title;
   }
 
   String getDate() {
-    if(_date == null) {
+    if(date == null) {
       return "";
     }
-    return DateFormat('dd/MM/yyyy').format(_date as DateTime);
+    return DateFormat('dd/MM/yyyy').format(date as DateTime);
   }
 
   DateTime? getDateTime(){
-    return _date;
-  }
-
-  void setDescription(String description){
-    _description = description;
+    return date;
   }
 
   String getDescription(){
-    return _description;
-  }
-
-  void setCity(String city){
-    _city = city;
+    return description;
   }
 
   String getCity(){
-    return _city;
+    return city;
   }
 
   Future<Weather> getWeather() async{
     String baseUrl = 'http://api.openweathermap.org/data/2.5/weather';
     String apiKey = '9ad79100fdf5b50dcb1b0e38caa4be33';
-    final response = await http.get(Uri.parse('$baseUrl?q=$_city&appid=$apiKey&units=metric'));
-    print('$baseUrl?q=$_city&appid=$apiKey&units=metric');
+    final response = await http.get(Uri.parse('$baseUrl?q=$city&appid=$apiKey&units=metric'));
 
     if(response.statusCode == 200){
       return Weather.fromJson(jsonDecode(response.body));
@@ -81,18 +78,10 @@ class Todo {
   }
 
   bool getIsDone() {
-    return _isDone;
-  }
-
-  void changeIsDone() {
-    _isDone = !_isDone;
+    return isDone;
   }
 
   bool getIsImportant() {
-    return _isImportant;
-  }
-
-  void changeIsImportant() {
-    _isImportant = !_isImportant;
+    return isImportant;
   }
 }

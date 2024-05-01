@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -8,14 +9,15 @@ import 'package:projet_todo_list/colors.dart';
 import 'package:projet_todo_list/models/todo.dart';
 import 'package:projet_todo_list/models/todoList.dart';
 import 'package:projet_todo_list/pages/widgetMap.dart';
+import 'package:worldtime/worldtime.dart';
 
 import '../models/weather.dart';
 import 'widgetEditTodo.dart';
 
 class WidgetTodo extends StatefulWidget {
-  const WidgetTodo({Key? key, required this.todo, required this.refresh})
+  WidgetTodo({Key? key, required this.todo, required this.refresh})
       : super(key: key);
-  final Todo todo;
+  Todo todo;
   final Function() refresh;
 
   @override
@@ -23,6 +25,8 @@ class WidgetTodo extends StatefulWidget {
 }
 
 class _WidgetToDoState extends State<WidgetTodo> {
+  Weather? _weather;
+
   @override
   Widget build(BuildContext context) {
     return
@@ -43,13 +47,11 @@ class _WidgetToDoState extends State<WidgetTodo> {
             resizeDuration: null,
             onDismissed: (DismissDirection direction) {
               if (direction == DismissDirection.endToStart) {
-                TodoList().remove(widget.todo);
-                widget.refresh();
+                TodoList().remove(widget.todo, widget.refresh);
               }
               if (direction == DismissDirection.startToEnd) {
                 setState(() {
-                  widget.todo.changeIsImportant();
-                  widget.refresh();
+                  TodoList().updateIsImportant(widget.todo, widget.refresh);
                 });
               }
             },
@@ -88,8 +90,7 @@ class _WidgetToDoState extends State<WidgetTodo> {
                   IconButton(
                       onPressed: () {
                         setState(() {
-                          widget.todo.changeIsDone();
-                          widget.refresh();
+                          TodoList().updateIsDone(widget.todo, widget.refresh);
                         });
                       },
                       icon: Icon(
@@ -101,8 +102,7 @@ class _WidgetToDoState extends State<WidgetTodo> {
                   IconButton(
                     onPressed: () {
                       setState(() {
-                        widget.todo.changeIsImportant();
-                        widget.refresh();
+                        TodoList().updateIsImportant(widget.todo, widget.refresh);
                       });
                     },
                     icon: Icon(
@@ -141,8 +141,7 @@ class _WidgetToDoState extends State<WidgetTodo> {
                   IconButton(
                     onPressed: () async {
                       if(await askForDelete()) {
-                        TodoList().remove(widget.todo);
-                        widget.refresh();
+                        TodoList().remove(widget.todo, widget.refresh);
                       }
                     },
                     icon: const Icon(
@@ -196,27 +195,49 @@ class _WidgetToDoState extends State<WidgetTodo> {
     return dismiss;
   }
 
-  String weatherAnimation(String? condition){
-    if(condition == null) return 'assets/sunny.json';
-    switch(condition.toLowerCase()){
+  Future<DateTime> getTimeZone() async {
+    final _worldtimePlugin = Worldtime();
+    DateTime timeZone = await _worldtimePlugin
+        .timeByLocation(latitude: _weather!.lat, longitude: _weather!.lon);
+    timeZone = timeZone.add(const Duration(hours: 2));
+    return timeZone.toUtc();
+  }
+
+  Future<String> weatherAnimation(String? condition) async {
+    String res = 'assets/';
+
+    if (condition == null) return 'assets/sunny.json';
+    if (_weather != null) {
+      DateTime timeZone = await getTimeZone();
+      if (timeZone.hour < 7 || 21 < timeZone.hour) {
+        res += 'n';
+      }
+    }
+
+    switch (condition?.toLowerCase()) {
       case 'mist':
       case 'smoke':
       case 'haze':
       case 'dust':
       case 'fog':
       case 'clouds':
-        return 'assets/clouds.json';
+        res += 'clouds.json';
+        break;
       case 'drizzle':
       case 'shower rain':
       case 'rain':
-        return 'assets/rain.json';
+        res += 'rain.json';
+        break;
       case 'thunderstorm':
-        return 'assets/thunderstorm.json';
+        res += 'thunderstorm.json';
+        break;
       case 'clear':
-        return 'assets/sunny.json';
+        res += 'sunny.json';
+        break;
       default:
-        return 'assets/sunny.json';
+        res += 'sunny.json';
     }
+    return res;
   }
 
   Widget setWidgetDetail(Weather? _weather) {
@@ -333,8 +354,18 @@ class _WidgetToDoState extends State<WidgetTodo> {
             SizedBox(
               height: 80,
               width: 80,
-              child: Lottie.asset(
-                weatherAnimation(_weather?.condition),
+              child: FutureBuilder<String>(
+                future: weatherAnimation(_weather?.condition),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return CircularProgressIndicator();
+                  } else if (snapshot.hasError) {
+                    return Text('Erreur: ${snapshot.error}');
+                  } else {
+                    String animationPath = snapshot.data!;
+                    return Lottie.asset(animationPath);
+                  }
+                },
               ),
             ),
             Text("Actuel: ${_weather?.temp ?? 0}°C",
@@ -364,51 +395,51 @@ class _WidgetToDoState extends State<WidgetTodo> {
     }
   }
 
-  Future todoDetail() async{
-    Weather? _weather;
-    try {
-      final weather = await widget.todo.getWeather();
-      setState(() {
-        _weather = weather;
-      });
-    }
-    catch(e){
-      print(e);
-    }
+  Future todoDetail() async {
+    await updateTodoDetail();
     return showDialog(
       context: context,
       builder: (context) {
-        return
-          AlertDialog(
-            title: Row(
-              children: [
-                Expanded(
-                  child: Text(widget.todo.getTitle()),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.edit),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => WidgetEditTodo(todo: widget.todo, refresh: affichage)),
-                    );
-                  },
-                ),
-              ],
-            ),
-            content: SizedBox(
-              width: MediaQuery.of(context).size.width * 0.7,
-              height: MediaQuery.of(context).size.height * 0.7,
-              child:SingleChildScrollView(child:setWidgetDetail(_weather)),
-            )
+        return AlertDialog(
+          title: Row(
+            children: [
+              Expanded(
+                child: Text(widget.todo.getTitle()),
+              ),
+              IconButton(
+                icon: const Icon(Icons.close),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          ),
+          content: SizedBox(
+            width: MediaQuery.of(context).size.width * 0.7,
+            height: MediaQuery.of(context).size.height * 0.7,
+            child: SingleChildScrollView(child: setWidgetDetail(_weather)),
+          ),
         );
       },
     );
   }
 
-  void affichage() {
-    setState(() {
-      widget.todo;
+  Future<void> updateTodoDetail() async {
+    try {
+      final updatedTodo = await TodoList().getTodo(widget.todo, widget.refresh);
+      final weather = await widget.todo.getWeather();
+      setState(() {
+        widget.todo = updatedTodo;
+        _weather = weather;
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void affichage()async{
+    setState((){
+      updateTodoDetail();
     });
   }
 }

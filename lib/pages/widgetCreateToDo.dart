@@ -57,7 +57,6 @@ class _WidgetCreateToDoState extends State<WidgetCreateToDo> {
     String titre = textController.text;
     if (titre.isNotEmpty) {
       TodoList().add(titre, widget.refresh);
-      widget.refresh();
       titre = "";
       setState(() {
         textController.clear();
@@ -68,7 +67,7 @@ class _WidgetCreateToDoState extends State<WidgetCreateToDo> {
           context: context,
           builder: (context) {
             return Dialog(
-                child: Padding(
+              child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 mainAxisSize: MainAxisSize.min,

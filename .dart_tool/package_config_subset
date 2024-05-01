@@ -122,6 +122,14 @@ source_span
 2.18
 file:///C:/Users/Maxime/AppData/Local/Pub/Cache/hosted/pub.dev/source_span-1.10.0/
 file:///C:/Users/Maxime/AppData/Local/Pub/Cache/hosted/pub.dev/source_span-1.10.0/lib/
+sqflite
+3.3
+file:///C:/Users/Maxime/AppData/Local/Pub/Cache/hosted/pub.dev/sqflite-2.3.3/
+file:///C:/Users/Maxime/AppData/Local/Pub/Cache/hosted/pub.dev/sqflite-2.3.3/lib/
+sqflite_common
+3.3
+file:///C:/Users/Maxime/AppData/Local/Pub/Cache/hosted/pub.dev/sqflite_common-2.5.4/
+file:///C:/Users/Maxime/AppData/Local/Pub/Cache/hosted/pub.dev/sqflite_common-2.5.4/lib/
 stack_trace
 2.18
 file:///C:/Users/Maxime/AppData/Local/Pub/Cache/hosted/pub.dev/stack_trace-1.11.1/
@@ -134,6 +142,10 @@ string_scanner
 2.18
 file:///C:/Users/Maxime/AppData/Local/Pub/Cache/hosted/pub.dev/string_scanner-1.2.0/
 file:///C:/Users/Maxime/AppData/Local/Pub/Cache/hosted/pub.dev/string_scanner-1.2.0/lib/
+synchronized
+3.0
+file:///C:/Users/Maxime/AppData/Local/Pub/Cache/hosted/pub.dev/synchronized-3.1.0+1/
+file:///C:/Users/Maxime/AppData/Local/Pub/Cache/hosted/pub.dev/synchronized-3.1.0+1/lib/
 term_glyph
 2.12
 file:///C:/Users/Maxime/AppData/Local/Pub/Cache/hosted/pub.dev/term_glyph-1.2.1/
@@ -166,6 +178,10 @@ wkt_parser
 2.12
 file:///C:/Users/Maxime/AppData/Local/Pub/Cache/hosted/pub.dev/wkt_parser-2.0.0/
 file:///C:/Users/Maxime/AppData/Local/Pub/Cache/hosted/pub.dev/wkt_parser-2.0.0/lib/
+worldtime
+3.0
+file:///C:/Users/Maxime/AppData/Local/Pub/Cache/hosted/pub.dev/worldtime-1.2.1/
+file:///C:/Users/Maxime/AppData/Local/Pub/Cache/hosted/pub.dev/worldtime-1.2.1/lib/
 projet_todo_list
 3.2
 file:///C:/Users/Maxime/Documents/GitHub/AppTodoListFlutter/
