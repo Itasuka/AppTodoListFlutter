@@ -41,13 +41,23 @@ class WidgetAppBar extends StatelessWidget implements PreferredSizeWidget{
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-
-                  CheckboxListTile(
+                  RadioListTile(
                     title: const Text("Favoris"),
-                    value: sortByFavorites,
+                    value: true,
+                    groupValue: sortByFavorites,
                     onChanged: (value) {
                       setState(() {
                         sortByFavorites = value!;
+                      });
+                    },
+                  ),
+                  RadioListTile(
+                    title: const Text("Date"),
+                    value: true,
+                    groupValue: !sortByFavorites,
+                    onChanged: (value) {
+                      setState(() {
+                        sortByFavorites = !value!;
                       });
                     },
                   ),
