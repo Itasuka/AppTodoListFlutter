@@ -30,6 +30,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_web_plugins:
+    sdk: flutter
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -41,8 +43,15 @@ dependencies:
   lottie: ^3.1.0
   flutter_map: ^6.1.0
   latlong2: ^0.9.1
-  worldtime: ^1.2.1
   sqflite: ^2.3.3
+  flutter_launcher_icons: ^0.13.1
+  sqflite_common_ffi: any
+  sqflite_common_ffi_web: any
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/logo.png"
 
 dev_dependencies:
   flutter_test:

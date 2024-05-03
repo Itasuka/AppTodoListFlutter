@@ -37,31 +37,11 @@ class Todo {
     isImportant: map['isImportant'] != null ? map['isImportant'].toInt() == 1 : false,
   );
 
-  int getId() {
-    return id;
-  }
-
-  String getTitle() {
-    return title;
-  }
-
   String getDate() {
     if(date == null) {
       return "";
     }
     return DateFormat('dd/MM/yyyy').format(date as DateTime);
-  }
-
-  DateTime? getDateTime(){
-    return date;
-  }
-
-  String getDescription(){
-    return description;
-  }
-
-  String getCity(){
-    return city;
   }
 
   Future<Weather> getWeather() async{
@@ -75,13 +55,5 @@ class Todo {
     else{
       throw Exception('Impossible de trouver la météo');
     }
-  }
-
-  bool getIsDone() {
-    return isDone;
-  }
-
-  bool getIsImportant() {
-    return isImportant;
   }
 }

@@ -3,13 +3,15 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart' as flutter_map;
+
 import 'package:latlong2/latlong.dart';
 import 'package:lottie/lottie.dart';
-import 'package:projet_todo_list/colors.dart';
+import 'package:projet_todo_list/models/colors.dart';
 import 'package:projet_todo_list/models/todo.dart';
 import 'package:projet_todo_list/models/todoList.dart';
 import 'package:projet_todo_list/pages/widgetMap.dart';
-import 'package:worldtime/worldtime.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 import '../models/weather.dart';
 import 'widgetEditTodo.dart';
@@ -83,7 +85,7 @@ class _WidgetToDoState extends State<WidgetTodo> {
               ),
             ),
             child:Container(
-              color: backgroundColor,
+              color: widget.todo.isDone ? backgroundColorCheck : backgroundColor,
               child: ListTile(
                 contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                 leading: Row(mainAxisSize: MainAxisSize.min, children: [
@@ -94,7 +96,7 @@ class _WidgetToDoState extends State<WidgetTodo> {
                         });
                       },
                       icon: Icon(
-                        widget.todo.getIsDone()
+                        widget.todo.isDone
                             ? Icons.check_box
                             : Icons.check_box_outline_blank,
                         color: textColor,
@@ -106,7 +108,7 @@ class _WidgetToDoState extends State<WidgetTodo> {
                       });
                     },
                     icon: Icon(
-                      widget.todo.getIsImportant() ? Icons.star : Icons.star_outline,
+                      widget.todo.isImportant ? Icons.star : Icons.star_outline,
                       color: starButton,
                     ),
                   )
@@ -116,23 +118,23 @@ class _WidgetToDoState extends State<WidgetTodo> {
                   children:[
                     Text(
                       overflow: TextOverflow.ellipsis,
-                      widget.todo.getTitle() ?? "",
+                      widget.todo.title ?? "",
                       style: TextStyle(
                         fontSize: 16,
                         color: textColor,
                         fontWeight: FontWeight.bold,
                         decoration:
-                            widget.todo.getIsDone() ? TextDecoration.lineThrough : null,
+                            widget.todo.isDone ? TextDecoration.lineThrough : null,
                       ),
                     ),
-                    if (widget.todo.getDateTime() != null)
+                    if (widget.todo.date != null)
                       Text(
                         widget.todo.getDate(),
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           fontSize: 12,
                           color: textColor,
-                          decoration: widget.todo.getIsDone() ? TextDecoration.lineThrough : null,
+                          decoration: widget.todo.isDone ? TextDecoration.lineThrough : null,
                         ),
                       ),
                   ]
@@ -195,12 +197,27 @@ class _WidgetToDoState extends State<WidgetTodo> {
     return dismiss;
   }
 
-  Future<DateTime> getTimeZone() async {
-    final _worldtimePlugin = Worldtime();
-    DateTime timeZone = await _worldtimePlugin
-        .timeByLocation(latitude: _weather!.lat, longitude: _weather!.lon);
-    timeZone = timeZone.add(const Duration(hours: 2));
-    return timeZone.toUtc();
+  Future<DateTime> timeByLocation({
+    required double latitude,
+    required double longitude,
+  }) async {
+    const String urlLocation = 'https://www.timeapi.io/api/Time/current/coordinate?';
+    final String url = '${urlLocation}latitude=$latitude&longitude=$longitude';
+    const Map<String, String> headers = {'Content-type': 'application/json; charset=UTF-8'};
+    try {
+      http.Response response = await http.get(
+        Uri.parse(url),
+        headers: headers,
+      );
+      final String data = utf8.decode(response.bodyBytes.toList());
+      if (response.statusCode != 200) {
+        return DateTime(1990);
+      }
+      final Map json = jsonDecode(data);
+      return DateTime.tryParse(json['dateTime']) ?? DateTime(1990);
+    }catch (e) {
+      rethrow;
+    }
   }
 
   Future<String> weatherAnimation(String? condition) async {
@@ -208,10 +225,13 @@ class _WidgetToDoState extends State<WidgetTodo> {
 
     if (condition == null) return 'assets/sunny.json';
     if (_weather != null) {
-      DateTime timeZone = await getTimeZone();
-      if (timeZone.hour < 7 || 21 < timeZone.hour) {
-        res += 'n';
-      }
+      try {
+        DateTime timeZone = await timeByLocation(
+            latitude: _weather!.lat, longitude: _weather!.lon);
+        if (timeZone.hour < 7 || 21 < timeZone.hour) {
+          res += 'n';
+        }
+      }catch(e){}
     }
 
     switch (condition?.toLowerCase()) {
@@ -244,7 +264,7 @@ class _WidgetToDoState extends State<WidgetTodo> {
     List<Widget> widgetsList = [];
     double mapSize = min(MediaQuery.of(context).size.width * 0.5, MediaQuery.of(context).size.height * 0.5);
 
-    if (widget.todo.getDescription() != "") {
+    if (widget.todo.description != "") {
       widgetsList.add(
         RichText(
           text: TextSpan(
@@ -254,7 +274,7 @@ class _WidgetToDoState extends State<WidgetTodo> {
                 style: TextStyle(fontWeight: FontWeight.bold, color: textColor),
               ),
               TextSpan(
-                text: widget.todo.getDescription(),
+                text: widget.todo.description,
                 style: const TextStyle(color: textColor),
               ),
             ],
@@ -280,7 +300,7 @@ class _WidgetToDoState extends State<WidgetTodo> {
         ),
       );
     }
-    if(widget.todo.getCity() != ""){
+    if(widget.todo.city != ""){
       widgetsList.add(
         RichText(
           text: TextSpan(
@@ -290,7 +310,7 @@ class _WidgetToDoState extends State<WidgetTodo> {
                 style: TextStyle(fontWeight: FontWeight.bold, color: textColor),
               ),
               TextSpan(
-                text: widget.todo.getCity(),
+                text: widget.todo.city,
                 style: const TextStyle(color: textColor),
               ),
             ],
@@ -342,7 +362,7 @@ class _WidgetToDoState extends State<WidgetTodo> {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => WidgetMap(weather: _weather, title: widget.todo.getTitle(),)),
+                        MaterialPageRoute(builder: (context) => WidgetMap(weather: _weather, title: widget.todo.title,)),
                       );
                     },
                     mini: true,
@@ -404,7 +424,7 @@ class _WidgetToDoState extends State<WidgetTodo> {
           title: Row(
             children: [
               Expanded(
-                child: Text(widget.todo.getTitle()),
+                child: Text(widget.todo.title),
               ),
               IconButton(
                 icon: const Icon(Icons.close),

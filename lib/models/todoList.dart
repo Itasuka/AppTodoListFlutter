@@ -6,9 +6,7 @@ class TodoList {
   final List<WidgetTodo> _widgetTodoList = List.empty(growable: true);
   static final TodoList _instance = TodoList.internal();
   final todoDB = TodoDB();
-  bool _sortByIsImportant = false;
-  bool _sortByIsDone = false;
-  bool _sortById = false;
+  bool _sortByIsImportant = true;
 
   factory TodoList() {
     return _instance;
@@ -53,9 +51,7 @@ class TodoList {
     initialisation(refresh);
   }
 
-  void setOrder(bool sortByIsImportant, bool sortByIsDone, bool sortById){
-    _sortById = sortById;
-    _sortByIsDone = sortByIsDone;
+  void setOrder(bool sortByIsImportant){
     _sortByIsImportant = sortByIsImportant;
   }
 
@@ -82,40 +78,36 @@ class TodoList {
 
   void sortTodoList() {
     _widgetTodoList.sort((a, b) {
-
-      if (_sortByIsDone) {
-        if (!a.todo.getIsDone() && b.todo.getIsDone()) {
-          return -1;
-        } else if (a.todo.getIsDone() && !b.todo.getIsDone()) {
-          return 1;
-        }
+      // Pour mettre les taches terminees en bas
+      if (a.todo.isDone != b.todo.isDone) {
+        return a.todo.isDone ? 1 : -1;
       }
-
+      // Tri par importance de la tache
       if (_sortByIsImportant) {
-        if (a.todo.getIsImportant() && !b.todo.getIsImportant()) {
+        if (a.todo.isImportant && !b.todo.isImportant) {
           return -1;
-        } else if (!a.todo.getIsImportant() && b.todo.getIsImportant()) {
+        } else if (!a.todo.isImportant && b.todo.isImportant) {
           return 1;
         }
+        else{
+          return a.todo.id.compareTo(b.todo.id);
+        }
       }
-
-      if (_sortById) {
-        return a.todo.getId().compareTo(b.todo.getId());
+      // Tri par date de saisie ou de derniere modification
+      if (a.todo.date != null && b.todo.date != null) {
+        int dateComparison = a.todo.date!.compareTo(b.todo.date!);
+        if (dateComparison != 0) {
+          return dateComparison;
+        }
       }
-
+      else {
+        return a.todo.id.compareTo(b.todo.id);
+      }
       return 0;
     });
   }
 
-  bool getCreationDate() {
-    return _sortById;
-  }
-
   bool getFavorites() {
     return _sortByIsImportant;
-  }
-
-  bool getInProgress() {
-    return _sortByIsDone;
   }
 }

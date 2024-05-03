@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 const Color textColor = Colors.black;
-const Color backgroundColor = Color.fromARGB(255, 240, 240, 240);
+const Color backgroundColor = Colors.white;
+const Color backgroundColorCheck = Color.fromARGB(255, 240, 240, 240);
 const Color buttonColor = Colors.blue;
 const Color insideButtonColor = Colors.white;
 const Color deleteButton = Color.fromARGB(255, 156, 24, 15);

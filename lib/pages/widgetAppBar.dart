@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:projet_todo_list/models/todoList.dart';
 
-import '../colors.dart';
+import '../models/colors.dart';
 
 class WidgetAppBar extends StatelessWidget implements PreferredSizeWidget{
   WidgetAppBar({Key? key, required this.refresh}) : super(key: key);
@@ -28,9 +28,7 @@ class WidgetAppBar extends StatelessWidget implements PreferredSizeWidget{
   }
 
   Future parameterPopUp(BuildContext context) async{
-    bool sortByCreationDate = todoList.getCreationDate();
     bool sortByFavorites = todoList.getFavorites();
-    bool sortByInProgress = todoList.getInProgress();
 
     await showDialog(
       context: context,
@@ -43,30 +41,13 @@ class WidgetAppBar extends StatelessWidget implements PreferredSizeWidget{
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  CheckboxListTile(
-                    title: const Text("En cours"),
-                    value: sortByInProgress,
-                    onChanged: (value) {
-                      setState(() {
-                        sortByInProgress = value!;
-                      });
-                    },
-                  ),
+
                   CheckboxListTile(
                     title: const Text("Favoris"),
                     value: sortByFavorites,
                     onChanged: (value) {
                       setState(() {
                         sortByFavorites = value!;
-                      });
-                    },
-                  ),
-                  CheckboxListTile(
-                    title: const Text("Date de création"),
-                    value: sortByCreationDate,
-                    onChanged: (value) {
-                      setState(() {
-                        sortByCreationDate = value!;
                       });
                     },
                   ),
@@ -83,7 +64,7 @@ class WidgetAppBar extends StatelessWidget implements PreferredSizeWidget{
                 ),
                 TextButton(
                   onPressed: () {
-                    TodoList().setOrder(sortByFavorites, sortByInProgress, sortByCreationDate);
+                    TodoList().setOrder(sortByFavorites,);
                     refresh();
                     Navigator.of(context).pop();
                   },

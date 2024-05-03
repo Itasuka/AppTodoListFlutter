@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:projet_todo_list/models/todoList.dart';
 
-import '../colors.dart';
+import '../models/colors.dart';
 import '../models/todo.dart';
 
 class WidgetEditTodo extends StatefulWidget {
@@ -27,10 +27,10 @@ class _WidgetEditTodoState extends State<WidgetEditTodo> {
   @override
   void initState() {
     super.initState();
-    _title = TextEditingController(text: widget.todo.getTitle());
-    _description = TextEditingController(text: widget.todo.getDescription());
-    _city = TextEditingController(text: widget.todo.getCity());
-    _date = widget.todo.getDateTime();
+    _title = TextEditingController(text: widget.todo.title);
+    _description = TextEditingController(text: widget.todo.description);
+    _city = TextEditingController(text: widget.todo.city);
+    _date = widget.todo.date;
   }
 
   @override

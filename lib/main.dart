@@ -1,7 +1,19 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:projet_todo_list/pages/widgetTodoList.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+import 'dart:io' show Platform;
+import 'package:sqflite_common_ffi_web/sqflite_ffi_web.dart';
 
-void main() {
+
+Future main() async{
+  if (kIsWeb) {
+    databaseFactory = databaseFactoryFfiWeb;
+  }
+  else if (!Platform.isAndroid && !Platform.isIOS) {
+    sqfliteFfiInit();
+    databaseFactory = databaseFactoryFfi;
+  }
   runApp(const MyApp());
 }
 
