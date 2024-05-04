@@ -39,7 +39,7 @@ class _WidgetToDoState extends State<WidgetTodo> {
               border: Border(
                 bottom: BorderSide(
                   color: separator,
-                  width: 1.0,
+                  width: 2.0,
                 )
               )
           ),

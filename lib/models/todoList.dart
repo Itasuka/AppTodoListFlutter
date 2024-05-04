@@ -1,18 +1,31 @@
+import 'package:flutter/widgets.dart';
 import 'package:projet_todo_list/database/todoDB.dart';
 import 'package:projet_todo_list/models/todo.dart';
+import 'package:projet_todo_list/pages/WidgetTodoSeparator.dart';
 import 'package:projet_todo_list/pages/widgetTodo.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class TodoList {
   final List<WidgetTodo> _widgetTodoList = List.empty(growable: true);
   static final TodoList _instance = TodoList.internal();
   final todoDB = TodoDB();
   bool _sortByIsImportant = true;
+  bool _displayIsDone = true;
+  late SharedPreferences prefs;
 
   factory TodoList() {
     return _instance;
   }
 
-  TodoList.internal();
+  TodoList.internal(){
+    init();
+  }
+
+  Future<void> init() async{
+    prefs = await SharedPreferences.getInstance();
+    _displayIsDone = prefs.getBool('displayIsDone') ?? true;
+    _sortByIsImportant = prefs.getBool('sortByIsImportant') ?? true;
+  }
 
   void initialisation(Function() refresh) async {
     List<Todo> todolist = await todoDB.fetchAll();
@@ -51,8 +64,14 @@ class TodoList {
     initialisation(refresh);
   }
 
-  void setOrder(bool sortByIsImportant){
-    _sortByIsImportant = sortByIsImportant;
+  Future<void> setDisplayIsDone() async {
+    _displayIsDone = !_displayIsDone;
+    await prefs.setBool('displayIsDone', _displayIsDone);
+  }
+
+  Future<void> setOrder() async {
+    _sortByIsImportant = !_sortByIsImportant;
+    await prefs.setBool('sortByIsImportant', _sortByIsImportant);
   }
 
   Future<Todo> getTodo(Todo todo, Function() refresh) async {
@@ -71,9 +90,27 @@ class TodoList {
     return List.from(_widgetTodoList);
   }
 
-  List<WidgetTodo> afficherList() {
+  List<Widget> afficherList(Function() refresh) {
     sortTodoList();
-    return _widgetTodoList;
+    List<Widget> notDone = [];
+    List<Widget> done = [];
+
+    for (var widgetTodo in _widgetTodoList) {
+      if (widgetTodo.todo.isDone) {
+        done.add(widgetTodo);
+      } else {
+        notDone.add(widgetTodo);
+      }
+    }
+
+    if (done.isNotEmpty) {
+      notDone.add(WidgetTodoSeparator(refresh: refresh));
+      if(_displayIsDone) {
+        notDone.addAll(done);
+      }
+    }
+
+    return notDone;
   }
 
   void sortTodoList() {
@@ -100,6 +137,12 @@ class TodoList {
           return dateComparison;
         }
       }
+      else if (a.todo.date == null && b.todo.date != null) {
+        return 1;
+      }
+      else if (a.todo.date != null && b.todo.date == null) {
+        return -1;
+      }
       else {
         return a.todo.id.compareTo(b.todo.id);
       }
@@ -109,5 +152,9 @@ class TodoList {
 
   bool getFavorites() {
     return _sortByIsImportant;
+  }
+
+  getDisplayIsDone() {
+    return _displayIsDone;
   }
 }

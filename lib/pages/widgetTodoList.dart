@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:projet_todo_list/pages/widgetAppBar.dart';
 import 'package:projet_todo_list/pages/widgetCreateToDo.dart';
 import 'package:projet_todo_list/models/todoList.dart';
-import 'package:projet_todo_list/pages/widgetTodo.dart';
 
 class WidgetTodoList extends StatefulWidget {
   WidgetTodoList({Key? key}) : super(key: key);
@@ -13,7 +12,7 @@ class WidgetTodoList extends StatefulWidget {
 
 class _WidgetTodoListState extends State<WidgetTodoList> {
   final TodoList todoList = TodoList();
-  List<WidgetTodo> _widgetTodoList = [];
+  List<Widget> _widgetTodoList = [];
 
   @override
   void initState() {
@@ -46,7 +45,7 @@ class _WidgetTodoListState extends State<WidgetTodoList> {
 
   void affichage() {
     setState(() {
-      _widgetTodoList = todoList.afficherList();
+      _widgetTodoList = todoList.afficherList(affichage);
     });
   }
 }

@@ -74,7 +74,7 @@ class WidgetAppBar extends StatelessWidget implements PreferredSizeWidget{
                 ),
                 TextButton(
                   onPressed: () {
-                    TodoList().setOrder(sortByFavorites,);
+                    TodoList().setOrder();
                     refresh();
                     Navigator.of(context).pop();
                   },
