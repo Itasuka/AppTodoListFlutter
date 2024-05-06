@@ -420,7 +420,10 @@ class _WidgetToDoState extends State<WidgetTodo> {
     return showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
+        return SizedBox(
+          width: MediaQuery.of(context).size.width * 0.7,
+          height: MediaQuery.of(context).size.height * 0.7,
+          child: SingleChildScrollView(child: AlertDialog(
           title: Row(
             children: [
               Expanded(
@@ -434,10 +437,7 @@ class _WidgetToDoState extends State<WidgetTodo> {
               ),
             ],
           ),
-          content: SizedBox(
-            width: MediaQuery.of(context).size.width * 0.7,
-            height: MediaQuery.of(context).size.height * 0.7,
-            child: SingleChildScrollView(child: setWidgetDetail(_weather)),
+          content: setWidgetDetail(_weather)),
           ),
         );
       },

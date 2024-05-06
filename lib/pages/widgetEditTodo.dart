@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:projet_todo_list/models/todoList.dart';
 
@@ -66,7 +67,11 @@ class _WidgetEditTodoState extends State<WidgetEditTodo> {
                     TextFormField(
                       controller: _title,
                       decoration: const InputDecoration(
-                        labelText: 'Titre',
+                        labelText: 'Titre (50 caractères max)',
+                        labelStyle: TextStyle(
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -74,17 +79,38 @@ class _WidgetEditTodoState extends State<WidgetEditTodo> {
                         }
                         return null;
                       },
+                      inputFormatters: [
+                        LengthLimitingTextInputFormatter(50),
+                      ],
                     ),
                     const SizedBox(height: 16),
                     TextFormField(
                       controller: _description,
                       maxLines: null,
-                      decoration: const InputDecoration(labelText: 'Description'),
+                      decoration: const InputDecoration(
+                        labelText: 'Description (500 caractères max)',
+                        labelStyle: TextStyle(
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      inputFormatters: [
+                        LengthLimitingTextInputFormatter(500),
+                      ],
                     ),
                     const SizedBox(height: 16),
                     TextFormField(
                       controller: _city,
-                      decoration: const InputDecoration(labelText: 'Ville'),
+                      decoration: const InputDecoration(
+                        labelText: 'Ville',
+                        labelStyle: TextStyle(
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      inputFormatters: [
+                        LengthLimitingTextInputFormatter(100),
+                      ],
                     ),
                     const SizedBox(height: 16),
                     Row(

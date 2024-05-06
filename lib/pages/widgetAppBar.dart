@@ -15,15 +15,19 @@ class WidgetAppBar extends StatelessWidget implements PreferredSizeWidget{
   Widget build(BuildContext context) {
     return AppBar(
       backgroundColor: buttonColor,
-      title: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+      title: const Text(
+        'My todo',
+        style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold, color: insideButtonColor),
+      ),
+      actions: [
         IconButton(
           onPressed: () {
             parameterPopUp(context);
           },
           tooltip: "Paramètres",
-          icon: const Icon(Icons.settings, color: insideButtonColor),
+          icon: Icon(Icons.settings, color: insideButtonColor),
         ),
-      ]),
+      ],
     );
   }
 
@@ -61,8 +65,6 @@ class WidgetAppBar extends StatelessWidget implements PreferredSizeWidget{
                       });
                     },
                   ),
-                  const Text("En cours a la prioritée sur les favoris."),
-                  const Text("Les favoris ont la priorité sur la date."),
                 ],
               ),
               actions: <Widget>[
