@@ -1,6 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:projet_todo_list/models/todoList.dart';
 
@@ -24,13 +28,14 @@ class _WidgetEditTodoState extends State<WidgetEditTodo> {
   late TextEditingController _description;
   late TextEditingController _city;
   late DateTime? _date;
+  String _cityValidationMessage = '';
 
   @override
   void initState() {
     super.initState();
     _title = TextEditingController(text: widget.todo.title);
     _description = TextEditingController(text: widget.todo.description);
-    _city = TextEditingController(text: widget.todo.city);
+    _city = TextEditingController(text: widget.todo.address);
     _date = widget.todo.date;
   }
 
@@ -44,6 +49,7 @@ class _WidgetEditTodoState extends State<WidgetEditTodo> {
 
   @override
   Widget build(BuildContext context) {
+
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         home: Scaffold(
@@ -66,10 +72,11 @@ class _WidgetEditTodoState extends State<WidgetEditTodo> {
                   children: [
                     TextFormField(
                       controller: _title,
+                      autofocus: false,
                       decoration: const InputDecoration(
                         labelText: 'Titre (50 caractères max)',
                         labelStyle: TextStyle(
-                          fontSize: 20.0,
+                          fontSize: 16.0,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -86,6 +93,7 @@ class _WidgetEditTodoState extends State<WidgetEditTodo> {
                     const SizedBox(height: 16),
                     TextFormField(
                       controller: _description,
+                      autofocus: false,
                       maxLines: null,
                       decoration: const InputDecoration(
                         labelText: 'Description (500 caractères max)',
@@ -101,13 +109,36 @@ class _WidgetEditTodoState extends State<WidgetEditTodo> {
                     const SizedBox(height: 16),
                     TextFormField(
                       controller: _city,
-                      decoration: const InputDecoration(
-                        labelText: 'Ville',
-                        labelStyle: TextStyle(
+                      autofocus: false,
+                      decoration: InputDecoration(
+                        labelText: 'Adresse',
+                        errorText: _cityValidationMessage.isNotEmpty ? _cityValidationMessage : null,
+                        labelStyle: const TextStyle(
                           fontSize: 16.0,
                           fontWeight: FontWeight.bold,
                         ),
+                        suffixIcon: IconButton(
+                          onPressed: () async {
+                            Position? position = await _getCurrentLocation();
+                            if (position != null) {
+                              String address = await _getAddressFromLatLng(position.latitude, position.longitude);
+                              setState(() {
+                                _city.text = address;
+                                _cityValidationMessage = '';
+                              });
+                            } else {
+                              _cityValidationMessage = 'Impossible de récupérer la position géographique actuelle';
+                            }
+                          },
+                          icon: Icon(Icons.my_location),
+                        ),
                       ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Veuillez saisir une adresse';
+                        }
+                        return null;
+                      },
                       inputFormatters: [
                         LengthLimitingTextInputFormatter(100),
                       ],
@@ -147,8 +178,15 @@ class _WidgetEditTodoState extends State<WidgetEditTodo> {
                         style: ElevatedButton.styleFrom(
                           foregroundColor: buttonColor, backgroundColor: insideButtonColor,
                         ),
-                        onPressed: () {
+                        onPressed: () async {
                           if (_formKey.currentState!.validate()) {
+                            bool isAddressValid = await TodoList().checkAdressAvailability(_city.text);
+                            if (!isAddressValid) {
+                              setState(() {
+                                _cityValidationMessage = 'Adresse non valide';
+                              });
+                              return;
+                            }
                             TodoList().update(
                                 widget.todo,
                                 _title.text,
@@ -170,5 +208,43 @@ class _WidgetEditTodoState extends State<WidgetEditTodo> {
           ),
         )
     );
+  }
+
+  Future<Position?> _getCurrentLocation() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      return null;
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        return null;
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      return null;
+    }
+
+    return await Geolocator.getCurrentPosition();
+  }
+
+  Future<String> _getAddressFromLatLng(double latitude, double longitude) async {
+    final response = await http.get(
+      Uri.parse('https://nominatim.openstreetmap.org/reverse?lat=$latitude&lon=$longitude&format=json'),
+    );
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> jsonResponse = json.decode(response.body);
+      String address = jsonResponse['display_name'];
+      return address;
+    } else {
+      throw Exception('Failed to load address');
+    }
   }
 }

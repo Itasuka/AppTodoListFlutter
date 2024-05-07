@@ -48,6 +48,9 @@ dependencies:
   sqflite_common_ffi: any
   sqflite_common_ffi_web: any
   shared_preferences: ^2.2.3
+  path: any
+  osm_nominatim: ^3.0.0
+  geolocator: any
 
 flutter_icons:
   android: true

@@ -300,7 +300,7 @@ class _WidgetToDoState extends State<WidgetTodo> {
         ),
       );
     }
-    if(widget.todo.city != ""){
+    if(widget.todo.address != ""){
       widgetsList.add(
         RichText(
           text: TextSpan(
@@ -310,7 +310,7 @@ class _WidgetToDoState extends State<WidgetTodo> {
                 style: TextStyle(fontWeight: FontWeight.bold, color: textColor),
               ),
               TextSpan(
-                text: widget.todo.city,
+                text: widget.todo.address,
                 style: const TextStyle(color: textColor),
               ),
             ],
@@ -318,7 +318,7 @@ class _WidgetToDoState extends State<WidgetTodo> {
         ),
       );
     }
-    if(_weather != null){
+    if(_weather != null && _weather.lon != 0 && _weather.lat != 0){
       widgetsList.add(const SizedBox(height: 16),);
       widgetsList.add(
        Center(
@@ -366,7 +366,7 @@ class _WidgetToDoState extends State<WidgetTodo> {
                       );
                     },
                     mini: true,
-                    child: Icon(Icons.fullscreen),
+                    child: const Icon(Icons.fullscreen),
                   ),
                 ),
               ])
@@ -375,10 +375,10 @@ class _WidgetToDoState extends State<WidgetTodo> {
               height: 80,
               width: 80,
               child: FutureBuilder<String>(
-                future: weatherAnimation(_weather?.condition),
+                future: weatherAnimation(_weather.condition),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return CircularProgressIndicator();
+                    return const CircularProgressIndicator();
                   } else if (snapshot.hasError) {
                     return Text('Erreur: ${snapshot.error}');
                   } else {
@@ -388,13 +388,13 @@ class _WidgetToDoState extends State<WidgetTodo> {
                 },
               ),
             ),
-            Text("Actuel: ${_weather?.temp ?? 0}°C",
+            Text("Actuel: ${_weather.temp ?? 0}°C",
               softWrap: true,
-              style: TextStyle(fontWeight: FontWeight.bold, color: textColor),
+              style: const TextStyle(fontWeight: FontWeight.bold, color: textColor),
             ),
-            Text("Min: ${_weather?.minTemp ?? 0}°C | Max: ${_weather?.maxTemp ?? 0}°C",
+            Text("Min: ${_weather.minTemp ?? 0}°C | Max: ${_weather.maxTemp ?? 0}°C",
               softWrap: true,
-              style: TextStyle(fontWeight: FontWeight.bold, color: textColor),
+              style: const TextStyle(fontWeight: FontWeight.bold, color: textColor),
             )
           ]
           )
