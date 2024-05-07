@@ -53,8 +53,10 @@ class _WidgetEditTodoState extends State<WidgetEditTodo> {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         home: Scaffold(
+          backgroundColor: AppColor().background(),
           appBar: AppBar(
-            title: const Text('Editez votre todo'),
+            backgroundColor: AppColor().buttonColor(),
+            title: Text('Editez votre todo', style: TextStyle(color: AppColor().iconOnColor()),),
             leading: IconButton(
               icon: const Icon(Icons.arrow_back),
               onPressed: () {
@@ -73,9 +75,11 @@ class _WidgetEditTodoState extends State<WidgetEditTodo> {
                     TextFormField(
                       controller: _title,
                       autofocus: false,
-                      decoration: const InputDecoration(
+                      style: TextStyle(color: AppColor().textColor()),
+                      decoration: InputDecoration(
                         labelText: 'Titre (50 caractères max)',
                         labelStyle: TextStyle(
+                          color: AppColor().textColor(),
                           fontSize: 16.0,
                           fontWeight: FontWeight.bold,
                         ),
@@ -94,10 +98,12 @@ class _WidgetEditTodoState extends State<WidgetEditTodo> {
                     TextFormField(
                       controller: _description,
                       autofocus: false,
+                      style: TextStyle(color: AppColor().textColor()),
                       maxLines: null,
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         labelText: 'Description (500 caractères max)',
                         labelStyle: TextStyle(
+                          color: AppColor().textColor(),
                           fontSize: 16.0,
                           fontWeight: FontWeight.bold,
                         ),
@@ -110,10 +116,12 @@ class _WidgetEditTodoState extends State<WidgetEditTodo> {
                     TextFormField(
                       controller: _city,
                       autofocus: false,
+                      style: TextStyle(color: AppColor().textColor()),
                       decoration: InputDecoration(
                         labelText: 'Adresse',
                         errorText: _cityValidationMessage.isNotEmpty ? _cityValidationMessage : null,
-                        labelStyle: const TextStyle(
+                        labelStyle: TextStyle(
+                          color: AppColor().textColor(),
                           fontSize: 16.0,
                           fontWeight: FontWeight.bold,
                         ),
@@ -130,7 +138,7 @@ class _WidgetEditTodoState extends State<WidgetEditTodo> {
                               _cityValidationMessage = 'Impossible de récupérer la position géographique actuelle';
                             }
                           },
-                          icon: Icon(Icons.my_location),
+                          icon: Icon(Icons.my_location, color: AppColor().textColor(),),
                         ),
                       ),
                       validator: (value) {
@@ -146,7 +154,7 @@ class _WidgetEditTodoState extends State<WidgetEditTodo> {
                     const SizedBox(height: 16),
                     Row(
                       children: [
-                        const Icon(Icons.calendar_today),
+                        Icon(Icons.calendar_today, color: AppColor().textColor(),),
                         const SizedBox(width: 8),
                         TextButton(
                           onPressed: () {
@@ -165,7 +173,7 @@ class _WidgetEditTodoState extends State<WidgetEditTodo> {
                           },
                           child: Text(
                             _date != null ? DateFormat('dd/MM/yyyy').format(_date!) : 'Sélectionner une date',
-                            style: const TextStyle(color: textColor),
+                            style: TextStyle(color: AppColor().textColor()),
                           ),
                         ),
                       ],
@@ -176,7 +184,7 @@ class _WidgetEditTodoState extends State<WidgetEditTodo> {
                       width: double.infinity,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          foregroundColor: buttonColor, backgroundColor: insideButtonColor,
+                          backgroundColor: AppColor().buttonColor(),
                         ),
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
@@ -198,7 +206,7 @@ class _WidgetEditTodoState extends State<WidgetEditTodo> {
                             widget.refresh;
                           }
                         },
-                        child: const Text('Valider'),
+                        child: Text('Valider', style: TextStyle(color: AppColor().insideButtonColor()),),
                       ),
                     ),
                   ],

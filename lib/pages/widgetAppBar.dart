@@ -14,10 +14,10 @@ class WidgetAppBar extends StatelessWidget implements PreferredSizeWidget{
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: buttonColor,
-      title: const Text(
+      backgroundColor: AppColor().buttonColor(),
+      title: Text(
         'My todo',
-        style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold, color: insideButtonColor),
+        style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold, color: AppColor().insideButtonColor()),
       ),
       actions: [
         IconButton(
@@ -25,7 +25,7 @@ class WidgetAppBar extends StatelessWidget implements PreferredSizeWidget{
             parameterPopUp(context);
           },
           tooltip: "Paramètres",
-          icon: Icon(Icons.settings, color: insideButtonColor),
+          icon: Icon(Icons.settings, color: AppColor().insideButtonColor()),
         ),
       ],
     );
@@ -33,6 +33,7 @@ class WidgetAppBar extends StatelessWidget implements PreferredSizeWidget{
 
   Future parameterPopUp(BuildContext context) async{
     bool sortByFavorites = todoList.getFavorites();
+    bool theme = AppColor().getTheme();
 
     await showDialog(
       context: context,
@@ -40,13 +41,15 @@ class WidgetAppBar extends StatelessWidget implements PreferredSizeWidget{
         return StatefulBuilder(
           builder: (context, setState) {
             return AlertDialog(
-              title: const Text("Trier par:"),
+              backgroundColor: AppColor().background(),
+              title: Text("Options", style: TextStyle(color: AppColor().textColor()),),
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
+                  Text("Trier par: ", style: TextStyle(color: AppColor().textColor())),
                   RadioListTile(
-                    title: const Text("Favoris"),
+                    title: Text("Favoris", style: TextStyle(color: AppColor().textColor()),),
                     value: true,
                     groupValue: sortByFavorites,
                     onChanged: (value) {
@@ -56,12 +59,22 @@ class WidgetAppBar extends StatelessWidget implements PreferredSizeWidget{
                     },
                   ),
                   RadioListTile(
-                    title: const Text("Date"),
+                    title: Text("Date", style: TextStyle(color: AppColor().textColor()),),
                     value: true,
                     groupValue: !sortByFavorites,
                     onChanged: (value) {
                       setState(() {
                         sortByFavorites = !value!;
+                      });
+                    },
+                  ),
+                  const SizedBox(height: 20),
+                  Text("Theme: ", style: TextStyle(color: AppColor().textColor())),
+                  Switch(
+                    value: theme,
+                    onChanged: (value) {
+                      setState((){
+                        theme = value;
                       });
                     },
                   ),
@@ -77,6 +90,7 @@ class WidgetAppBar extends StatelessWidget implements PreferredSizeWidget{
                 TextButton(
                   onPressed: () {
                     TodoList().setOrder();
+                    AppColor().setTheme(theme);
                     refresh();
                     Navigator.of(context).pop();
                   },

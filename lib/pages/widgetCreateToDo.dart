@@ -24,10 +24,13 @@ class _WidgetCreateToDoState extends State<WidgetCreateToDo> {
               bottom: 20,
             ),
             child: TextField(
-                controller: textController,
-                decoration: const InputDecoration(hintText: "Titre de la tâche"
-                    //border: InputBorder.none
-                    ))),
+              controller: textController,
+              decoration: InputDecoration(
+                hintText: "Titre de la tâche",
+                hintStyle: TextStyle(color: AppColor().textColor()),
+              ),
+            )
+        ),
       ),
       Container(
         alignment: Alignment.bottomRight,
@@ -40,13 +43,13 @@ class _WidgetCreateToDoState extends State<WidgetCreateToDo> {
             creerTache();
           },
           style: ElevatedButton.styleFrom(
-            backgroundColor: buttonColor,
+            backgroundColor: AppColor().buttonColor(),
             minimumSize: const Size(60, 60),
             elevation: 10,
           ),
-          child: const Text(
+          child: Text(
             '+',
-            style: TextStyle(color: insideButtonColor, fontSize: 40),
+            style: TextStyle(color: AppColor().insideButtonColor(), fontSize: 40),
           ),
         ),
       ),

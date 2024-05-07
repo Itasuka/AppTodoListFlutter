@@ -16,11 +16,11 @@ class WidgetTodoSeparator extends StatelessWidget {
       },
       child: Container(
         height: 30,
-        color: separatorDone,
+        color: AppColor().separatorDone(),
         child: Center(
           child: Icon(
             TodoList().getDisplayIsDone() ? Icons.arrow_drop_down : Icons.arrow_drop_up,
-            color: textColor,
+            color: AppColor().textColor(),
           ),
         ),
       ),

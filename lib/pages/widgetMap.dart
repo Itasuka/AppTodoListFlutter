@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 
+import '../models/colors.dart';
 import '../models/weather.dart';
 
 class WidgetMap extends StatelessWidget {
@@ -15,7 +16,8 @@ class WidgetMap extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Carte de "$title"'),
+        backgroundColor: AppColor().buttonColor(),
+        title: Text('Carte de "$title"', style: TextStyle(color: AppColor().insideButtonColor()),),
       ),
       body: Center(
         child: FlutterMap(

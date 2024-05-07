@@ -35,10 +35,10 @@ class _WidgetToDoState extends State<WidgetTodo> {
       GestureDetector(
         onTap: () {todoDetail();},
         child:Container(
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
               border: Border(
                 bottom: BorderSide(
-                  color: separator,
+                  color: AppColor().separator(),
                   width: 2.0,
                 )
               )
@@ -64,28 +64,28 @@ class _WidgetToDoState extends State<WidgetTodo> {
                 return true;
               }
             },
-            background: const ColoredBox(
-              color: starButton,
+            background: ColoredBox(
+              color: AppColor().starButton(),
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Padding(
-                  padding: EdgeInsets.all(16.0),
-                  child: Icon(Icons.star, color: iconOnColor),
+                  padding: const EdgeInsets.all(16.0),
+                  child: Icon(Icons.star, color: AppColor().iconOnColor()),
                 ),
               ),
             ),
-            secondaryBackground: const ColoredBox(
-              color: deleteButton,
+            secondaryBackground: ColoredBox(
+              color: AppColor().deleteButton(),
               child: Align(
                 alignment: Alignment.centerRight,
                 child: Padding(
-                  padding: EdgeInsets.all(16.0),
-                  child: Icon(Icons.delete, color: iconOnColor),
+                  padding: const EdgeInsets.all(16.0),
+                  child: Icon(Icons.delete, color: AppColor().iconOnColor()),
                 ),
               ),
             ),
             child:Container(
-              color: widget.todo.isDone ? backgroundColorCheck : backgroundColor,
+              color: widget.todo.isDone ? AppColor().backgroundColorCheck() : AppColor().backgroundColor(),
               child: ListTile(
                 contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                 leading: Row(mainAxisSize: MainAxisSize.min, children: [
@@ -99,7 +99,7 @@ class _WidgetToDoState extends State<WidgetTodo> {
                         widget.todo.isDone
                             ? Icons.check_box
                             : Icons.check_box_outline_blank,
-                        color: textColor,
+                        color: AppColor().textTodo(),
                       )),
                   IconButton(
                     onPressed: () {
@@ -109,7 +109,7 @@ class _WidgetToDoState extends State<WidgetTodo> {
                     },
                     icon: Icon(
                       widget.todo.isImportant ? Icons.star : Icons.star_outline,
-                      color: starButton,
+                      color: AppColor().starButton(),
                     ),
                   )
                 ]),
@@ -121,7 +121,7 @@ class _WidgetToDoState extends State<WidgetTodo> {
                       widget.todo.title ?? "",
                       style: TextStyle(
                         fontSize: 16,
-                        color: textColor,
+                        color: AppColor().textTodo(),
                         fontWeight: FontWeight.bold,
                         decoration:
                             widget.todo.isDone ? TextDecoration.lineThrough : null,
@@ -133,7 +133,7 @@ class _WidgetToDoState extends State<WidgetTodo> {
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           fontSize: 12,
-                          color: textColor,
+                          color: AppColor().textTodo(),
                           decoration: widget.todo.isDone ? TextDecoration.lineThrough : null,
                         ),
                       ),
@@ -146,13 +146,13 @@ class _WidgetToDoState extends State<WidgetTodo> {
                         TodoList().remove(widget.todo, widget.refresh);
                       }
                     },
-                    icon: const Icon(
+                    icon: Icon(
                       Icons.delete,
-                      color: deleteButton,
+                      color: AppColor().deleteButton(),
                     )
                   ),
                   IconButton(
-                    icon: const Icon(Icons.edit),
+                    icon: Icon(Icons.edit, color: AppColor().textTodo(),),
                     onPressed: () {
                       Navigator.push(
                         context,
@@ -269,13 +269,13 @@ class _WidgetToDoState extends State<WidgetTodo> {
         RichText(
           text: TextSpan(
             children: [
-              const TextSpan(
+              TextSpan(
                 text: 'Description: ',
-                style: TextStyle(fontWeight: FontWeight.bold, color: textColor),
+                style: TextStyle(fontWeight: FontWeight.bold, color: AppColor().textColor()),
               ),
               TextSpan(
                 text: widget.todo.description,
-                style: const TextStyle(color: textColor),
+                style: TextStyle(color: AppColor().textColor()),
               ),
             ],
           ),
@@ -287,13 +287,13 @@ class _WidgetToDoState extends State<WidgetTodo> {
         RichText(
           text: TextSpan(
             children: [
-              const TextSpan(
+              TextSpan(
                 text: 'Date d\'échéance: ',
-                style: TextStyle(fontWeight: FontWeight.bold, color: textColor),
+                style: TextStyle(fontWeight: FontWeight.bold, color: AppColor().textColor()),
               ),
               TextSpan(
                 text: widget.todo.getDate(),
-                style: const TextStyle(color: textColor),
+                style: TextStyle(color: AppColor().textColor()),
               ),
             ],
           ),
@@ -305,13 +305,13 @@ class _WidgetToDoState extends State<WidgetTodo> {
         RichText(
           text: TextSpan(
             children: [
-              const TextSpan(
+              TextSpan(
                 text: 'Ville: ',
-                style: TextStyle(fontWeight: FontWeight.bold, color: textColor),
+                style: TextStyle(fontWeight: FontWeight.bold, color: AppColor().textColor()),
               ),
               TextSpan(
                 text: widget.todo.address,
-                style: const TextStyle(color: textColor),
+                style: TextStyle(color: AppColor().textColor()),
               ),
             ],
           ),
@@ -390,11 +390,11 @@ class _WidgetToDoState extends State<WidgetTodo> {
             ),
             Text("Actuel: ${_weather.temp ?? 0}°C",
               softWrap: true,
-              style: const TextStyle(fontWeight: FontWeight.bold, color: textColor),
+              style: TextStyle(fontWeight: FontWeight.bold, color: AppColor().textColor()),
             ),
             Text("Min: ${_weather.minTemp ?? 0}°C | Max: ${_weather.maxTemp ?? 0}°C",
               softWrap: true,
-              style: const TextStyle(fontWeight: FontWeight.bold, color: textColor),
+              style: TextStyle(fontWeight: FontWeight.bold, color: AppColor().textColor()),
             )
           ]
           )
@@ -403,8 +403,8 @@ class _WidgetToDoState extends State<WidgetTodo> {
     }
 
     if(widgetsList.isEmpty){
-      return const Text("Vous n'avez pas encore édité cette activité. \n"
-          "Une fois cela fait, vous aurez toutes les informations renseignées qui apparaîtront ici.");
+      return Text("Vous n'avez pas encore édité cette activité. \n"
+          "Une fois cela fait, vous aurez toutes les informations renseignées qui apparaîtront ici.", style: TextStyle(color: AppColor().textColor()),);
     }
     else {
       return Column(
@@ -423,20 +423,22 @@ class _WidgetToDoState extends State<WidgetTodo> {
         return SizedBox(
           width: MediaQuery.of(context).size.width * 0.7,
           height: MediaQuery.of(context).size.height * 0.7,
-          child: SingleChildScrollView(child: AlertDialog(
-          title: Row(
-            children: [
-              Expanded(
-                child: Text(widget.todo.title),
+          child: SingleChildScrollView(
+            child: AlertDialog(
+              backgroundColor: AppColor().background(),
+              title: Row(
+                children: [
+                  Expanded(
+                    child: Text(widget.todo.title, style: TextStyle(color: AppColor().textColor()),),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.close),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                ],
               ),
-              IconButton(
-                icon: const Icon(Icons.close),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),
-            ],
-          ),
           content: setWidgetDetail(_weather)),
           ),
         );

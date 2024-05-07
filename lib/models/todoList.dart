@@ -186,6 +186,7 @@ class TodoList {
     return _displayIsDone;
   }
 
+  //Permet de valider l'existance d'une adresse avant validation du formulaire
   Future<bool> checkAdressAvailability(String address) async {
     String url = 'https://nominatim.openstreetmap.org/search?format=json&q=$address';
     var response = await http.get(Uri.parse(url));

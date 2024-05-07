@@ -3,6 +3,8 @@ import 'package:projet_todo_list/pages/widgetAppBar.dart';
 import 'package:projet_todo_list/pages/widgetCreateToDo.dart';
 import 'package:projet_todo_list/models/todoList.dart';
 
+import '../models/colors.dart';
+
 class WidgetTodoList extends StatefulWidget {
   WidgetTodoList({Key? key}) : super(key: key);
 
@@ -28,6 +30,7 @@ class _WidgetTodoListState extends State<WidgetTodoList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColor().background(),
       appBar: WidgetAppBar(refresh: affichage),
       body: Column(
         children: [

@@ -57,8 +57,8 @@ class Todo {
     String baseUrl = 'https://api.openweathermap.org/data/2.5/weather';
     String apiKey = '9ad79100fdf5b50dcb1b0e38caa4be33';
 
+    //regarde si le serveur retourne une solution pour la position et créé un objet Weather
     final response = await http.get(Uri.parse('$baseUrl?lat=$lat&lon=$lon&appid=$apiKey&units=metric'));
-    print('$baseUrl?lat=$lat&lon=$lon&appid=$apiKey&units=metric');
     if(response.statusCode == 200){
       return Weather.fromJson(jsonDecode(response.body), lat, lon);
     }
