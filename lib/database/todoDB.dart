@@ -67,7 +67,6 @@ class TodoDB{
 
   ///Mise à jour du titre, description, ville et date d'une tache
   Future<int> update({required int id, String? title, String? description, String? city, DateTime? date, double? lat, double? lon}) async {
-    print("lat:" + lat.toString() + "| lon: " + lon.toString());
     final database = await DatabaseService().database;
     return await database.update(
       tableName,

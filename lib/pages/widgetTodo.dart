@@ -18,8 +18,7 @@ import 'widgetEditTodo.dart';
 
 ///Gestion de l'affichage de chaque tâches ainsi que de sa popup de détail
 class WidgetTodo extends StatefulWidget {
-  WidgetTodo({Key? key, required this.todo, required this.refresh})
-      : super(key: key);
+  WidgetTodo({super.key, required this.todo, required this.refresh});
   Todo todo;
   final Function() refresh;
 
@@ -125,7 +124,7 @@ class _WidgetToDoState extends State<WidgetTodo> {
                   children:[
                     Text(
                       overflow: TextOverflow.ellipsis,
-                      widget.todo.title ?? "",
+                      widget.todo.title,
                       style: TextStyle(
                         fontSize: 16,
                         color: AppColor().textTodo(),
@@ -274,7 +273,7 @@ class _WidgetToDoState extends State<WidgetTodo> {
   }
 
   ///Fonction retournant une liste de widgets en fonction des données ajouté à la tache
-  Widget setWidgetDetail(Weather? _weather) {
+  Widget setWidgetDetail(Weather? weather) {
     //Liste de widget retourné en fonction des données que la tâche comprend.
     //Si une donnée est vide on ne l'ajoute pas à la liste
     List<Widget> widgetsList = [];
@@ -337,7 +336,7 @@ class _WidgetToDoState extends State<WidgetTodo> {
     }
     //Ajoute du widget map à la liste de widget et mise au point d'un curseur en fonction de la coordonnée
     //gps choisi
-    if(_weather != null && _weather.lon != 0 && _weather.lat != 0){
+    if(weather != null && weather.lon != 0 && weather.lat != 0){
       widgetsList.add(const SizedBox(height: 16),);
       widgetsList.add(
        Center(
@@ -350,7 +349,7 @@ class _WidgetToDoState extends State<WidgetTodo> {
                 children: [
                   flutter_map.FlutterMap(
                   options: flutter_map.MapOptions(
-                    initialCenter: LatLng(_weather.lat, _weather.lon),
+                    initialCenter: LatLng(weather.lat, weather.lon),
                     initialZoom: 11,
 
                   ),
@@ -361,7 +360,7 @@ class _WidgetToDoState extends State<WidgetTodo> {
                     ),
                     flutter_map.MarkerLayer(markers: [
                       flutter_map.Marker(
-                        point:LatLng(_weather.lat, _weather.lon),
+                        point:LatLng(weather.lat, weather.lon),
                         width: 60,
                         height: 60,
                         alignment: Alignment.center,
@@ -382,7 +381,7 @@ class _WidgetToDoState extends State<WidgetTodo> {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => WidgetMap(weather: _weather, title: widget.todo.title,)),
+                        MaterialPageRoute(builder: (context) => WidgetMap(weather: weather, title: widget.todo.title,)),
                       );
                     },
                     mini: true,
@@ -396,7 +395,7 @@ class _WidgetToDoState extends State<WidgetTodo> {
               height: 80,
               width: 80,
               child: FutureBuilder<String>(
-                future: weatherAnimation(_weather.condition),
+                future: weatherAnimation(weather.condition),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const CircularProgressIndicator();
@@ -410,11 +409,11 @@ class _WidgetToDoState extends State<WidgetTodo> {
               ),
             ),
             //Affichage des température
-            Text("Actuel: ${_weather.temp ?? 0}°C",
+            Text("Actuel: ${weather.temp}°C",
               softWrap: true,
               style: TextStyle(fontWeight: FontWeight.bold, color: AppColor().textColor()),
             ),
-            Text("Min: ${_weather.minTemp ?? 0}°C | Max: ${_weather.maxTemp ?? 0}°C",
+            Text("Min: ${weather.minTemp}°C | Max: ${weather.maxTemp}°C",
               softWrap: true,
               style: TextStyle(fontWeight: FontWeight.bold, color: AppColor().textColor()),
             )
@@ -479,9 +478,7 @@ class _WidgetToDoState extends State<WidgetTodo> {
         widget.todo = updatedTodo;
         _weather = weather;
       });
-    } catch (e) {
-      print(e);
-    }
+    } catch (e) {}
   }
   ///Fonction passé en paramêtre au widget d'edition pour la mise à jour des taches
   void affichage()async{

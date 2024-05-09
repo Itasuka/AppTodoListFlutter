@@ -5,7 +5,7 @@ import 'package:projet_todo_list/models/todoList.dart';
 ///Gestion du champ de création de nouvelle tâche
 class WidgetCreateToDo extends StatefulWidget {
   final Function() refresh;
-  const WidgetCreateToDo({Key? key, required this.refresh}) : super(key: key);
+  const WidgetCreateToDo({super.key, required this.refresh});
 
   @override
   State<WidgetCreateToDo> createState() => _WidgetCreateToDoState();

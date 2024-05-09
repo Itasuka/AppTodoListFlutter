@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
@@ -16,7 +15,7 @@ class WidgetEditTodo extends StatefulWidget {
   final Todo todo;
   final Function() refresh;
 
-  const WidgetEditTodo({Key? key, required this.todo, required this.refresh}) : super(key: key);
+  const WidgetEditTodo({super.key, required this.todo, required this.refresh});
 
   @override
   _WidgetEditTodoState createState() => _WidgetEditTodoState();

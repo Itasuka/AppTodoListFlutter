@@ -7,7 +7,7 @@ import '../models/colors.dart';
 
 ///Gestion de l'ensemble de l'affichage de l'application
 class WidgetTodoList extends StatefulWidget {
-  WidgetTodoList({Key? key}) : super(key: key);
+  const WidgetTodoList({Key? key}) : super(key: key);
 
   @override
   State<WidgetTodoList> createState() => _WidgetTodoListState();

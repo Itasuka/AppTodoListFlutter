@@ -5,7 +5,7 @@ import '../models/colors.dart';
 
 //Affichage de la barre supérieur de l'application
 class WidgetAppBar extends StatelessWidget implements PreferredSizeWidget{
-  WidgetAppBar({Key? key, required this.refresh}) : super(key: key);
+  WidgetAppBar({super.key, required this.refresh});
   final TodoList todoList = TodoList();
   final Function() refresh;
 
