@@ -7,7 +7,7 @@ import 'package:projet_todo_list/pages/widgetTodo.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
-//Objet singleton permettant la gestion de la liste de tache à travers l'application
+///Objet singleton permettant la gestion de la liste de tache à travers l'application
 class TodoList {
   final List<WidgetTodo> _widgetTodoList = List.empty(growable: true);
   static final TodoList _instance = TodoList.internal();
@@ -24,14 +24,14 @@ class TodoList {
     init();
   }
 
-  //Set les options de trie de l'application enregistrées dans des sharedPreferences
+  ///Recupere les options de trie de l'application enregistrées dans des sharedPreferences
   Future<void> init() async{
     prefs = await SharedPreferences.getInstance();
     _displayIsDone = prefs.getBool('displayIsDone') ?? true;
     _sortByIsImportant = prefs.getBool('sortByIsImportant') ?? true;
   }
 
-  //Met à jour la liste de tache depuis la BDD
+  ///Met à jour la liste de tache depuis la BDD
   void initialisation(Function() refresh) async {
     List<Todo> todolist = await todoDB.fetchAll();
     _widgetTodoList.clear();
@@ -41,63 +41,64 @@ class TodoList {
     refresh();
   }
 
-  //Ajout d'une tache
+  ///Ajout d'une tache
   void add(String message, Function() refresh) async {
     await todoDB.create(title: message);
     initialisation(refresh);
   }
 
-  //Suppression d'une tache
+  ///Suppression d'une tache
   void remove(Todo todo, Function() refresh) async{
     await todoDB.delete(todo.id);
     initialisation(refresh);
   }
 
-  //Mise à jour de l'état fini ou non de la tache
+  ///Mise à jour de l'état fini ou non de la tache
   void updateIsDone(Todo todo, Function() refresh) async{
     await todoDB.updateIsDone(id:todo.id, done:todo.isDone);
     initialisation(refresh);
   }
 
-  //Mise à jour de l'état d'importance d'une tache
+  ///Mise à jour de l'état d'importance d'une tache
   void updateIsImportant(Todo todo, Function() refresh) async{
     await todoDB.updateIsImportant(id:todo.id, important:todo.isImportant);
     initialisation(refresh);
   }
 
-  //Mise à jour du contenu d'une tache
-  void update(Todo todo, String? title, String? description, String? city, DateTime? date, Function() refresh) async{
+  ///Mise à jour du contenu d'une tache
+  void update(Todo todo, String? title, String? description, String? address, DateTime? date, Function() refresh) async{
     double lat = 0;
     double lon = 0;
     if(description == "") description = null;
-    if(city == "") city = null;
-
-    String url = 'https://nominatim.openstreetmap.org/search?format=json&q=$city';
-
-    var responseLatLon = await http.get(Uri.parse(url));
-    var responseBody = json.decode(responseLatLon.body);
-    if (responseBody != null && responseBody.isNotEmpty) {
-      lat = double.parse(responseBody[0]['lat']);
-      lon = double.parse(responseBody[0]['lon']);
+    if(address == "") address = null;
+    //Récupére les coordonnées de l'adresse fournis pour les mettres à jours dans la tâche
+    if(address != null && address != "") {
+      String url = 'https://nominatim.openstreetmap.org/search?format=json&q=$address';
+      var responseLatLon = await http.get(Uri.parse(url));
+      var responseBody = json.decode(responseLatLon.body);
+      if (responseBody != null && responseBody.isNotEmpty) {
+        lat = double.parse(responseBody[0]['lat']);
+        lon = double.parse(responseBody[0]['lon']);
+      }
     }
 
-    await todoDB.update(id:todo.id, title: title, description: description, city: city, date: date, lat: lat, lon: lon);
+    await todoDB.update(id:todo.id, title: title, description: description, city: address, date: date, lat: lat, lon: lon);
     initialisation(refresh);
   }
 
-  //Change l'options de l'affichage des tache finis
+  ///Change l'options de l'affichage des tache finis
   Future<void> setDisplayIsDone() async {
     _displayIsDone = !_displayIsDone;
     await prefs.setBool('displayIsDone', _displayIsDone);
   }
 
-  //Permet de changet le type d'affichage de la liste de tache
+  ///Permet de changet le type d'affichage de la liste de tache
   Future<void> setOrder() async {
     _sortByIsImportant = !_sortByIsImportant;
     await prefs.setBool('sortByIsImportant', _sortByIsImportant);
   }
 
-  //Retourne une tache particuliere de la liste de tache
+  ///Retourne une tache particuliere de la liste de tache
   Future<Todo> getTodo(Todo todo, Function() refresh) async {
     List<Todo> todolist = await todoDB.fetchAll();
     Todo res = todo;
@@ -110,12 +111,12 @@ class TodoList {
     return res;
   }
 
-  //Retourne la liste de widget de taches
+  ///Retourne la liste de widget de taches
   List<Todo> getList() {
     return List.from(_widgetTodoList);
   }
 
-  //Permet l'affichage de la liste de tache en fonction de l'ordre choisi
+  ///Permet l'affichage de la liste de tache en fonction de l'ordre choisi
   List<Widget> afficherList(Function() refresh) {
     sortTodoList();
     List<Widget> notDone = [];
@@ -138,7 +139,7 @@ class TodoList {
     return notDone;
   }
 
-  //Organise les taches en fonction des choix de l'utilisateur
+  ///Organise les taches en fonction des choix de l'utilisateur
   void sortTodoList() {
     _widgetTodoList.sort((a, b) {
       // Pour mettre les taches terminees en bas
@@ -176,17 +177,17 @@ class TodoList {
     });
   }
 
-  //Retourne l'état de l'option de trie en fonction de l'importance
+  ///Retourne l'état de l'option de trie en fonction de l'importance
   bool getFavorites() {
     return _sortByIsImportant;
   }
 
-  //Retourne si l'application doit afficher ou non les taches finis
+  ///Retourne si l'application doit afficher ou non les taches finis
   getDisplayIsDone() {
     return _displayIsDone;
   }
 
-  //Permet de valider l'existance d'une adresse avant validation du formulaire
+  ///Permet de valider l'existance d'une adresse avant validation du formulaire
   Future<bool> checkAdressAvailability(String address) async {
     String url = 'https://nominatim.openstreetmap.org/search?format=json&q=$address';
     var response = await http.get(Uri.parse(url));

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:projet_todo_list/models/colors.dart';
 import 'package:projet_todo_list/models/todoList.dart';
 
+///Permet de mettre se widget dans la liste de tâche pour séparer les faites des non finis
 class WidgetTodoSeparator extends StatelessWidget {
   const WidgetTodoSeparator({super.key, required this.refresh});
   final Function() refresh;

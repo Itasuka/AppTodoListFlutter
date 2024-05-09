@@ -16,6 +16,7 @@ import 'dart:convert';
 import '../models/weather.dart';
 import 'widgetEditTodo.dart';
 
+///Gestion de l'affichage de chaque tâches ainsi que de sa popup de détail
 class WidgetTodo extends StatefulWidget {
   WidgetTodo({Key? key, required this.todo, required this.refresh})
       : super(key: key);
@@ -33,6 +34,7 @@ class _WidgetToDoState extends State<WidgetTodo> {
   Widget build(BuildContext context) {
     return
       GestureDetector(
+        //affiche la popup de détail quand on clique sur une tâche
         onTap: () {todoDetail();},
         child:Container(
           decoration: BoxDecoration(
@@ -43,14 +45,17 @@ class _WidgetToDoState extends State<WidgetTodo> {
                 )
               )
           ),
+          //Dismissible permet d'ajouter en favoris ou supprimer une tâche
           child: Dismissible(
             direction: DismissDirection.horizontal,
             key: UniqueKey(),
             resizeDuration: null,
             onDismissed: (DismissDirection direction) {
+              //Mouvement de droite à gauche pour supprimer une tache
               if (direction == DismissDirection.endToStart) {
                 TodoList().remove(widget.todo, widget.refresh);
               }
+              //Mouvement de gauche à droite pour mettre en favorie une tache
               if (direction == DismissDirection.startToEnd) {
                 setState(() {
                   TodoList().updateIsImportant(widget.todo, widget.refresh);
@@ -58,6 +63,7 @@ class _WidgetToDoState extends State<WidgetTodo> {
               }
             },
             confirmDismiss: (direction) async {
+              //Ouvre une popup pour supprimer et accept directement pour les favoris
               if (direction == DismissDirection.endToStart) {
                 return askForDelete();
               } else{
@@ -84,6 +90,7 @@ class _WidgetToDoState extends State<WidgetTodo> {
                 ),
               ),
             ),
+              //Affichage des élements composant une tache(bouton fini, favori, titre, date, supprimer, éditer)
             child:Container(
               color: widget.todo.isDone ? AppColor().backgroundColorCheck() : AppColor().backgroundColor(),
               child: ListTile(
@@ -168,6 +175,7 @@ class _WidgetToDoState extends State<WidgetTodo> {
       );
   }
 
+  ///Popup pour confirmation de suppressions d'une tache
   Future<bool> askForDelete() async {
     bool dismiss = false;
     await showDialog(
@@ -197,13 +205,12 @@ class _WidgetToDoState extends State<WidgetTodo> {
     return dismiss;
   }
 
-  Future<DateTime> timeByLocation({
-    required double latitude,
-    required double longitude,
-  }) async {
+  ///Permet de recuperer l'heure d'une coordonnée géographique
+  Future<DateTime> timeByLocation({required double latitude, required double longitude}) async {
     const String urlLocation = 'https://www.timeapi.io/api/Time/current/coordinate?';
     final String url = '${urlLocation}latitude=$latitude&longitude=$longitude';
     const Map<String, String> headers = {'Content-type': 'application/json; charset=UTF-8'};
+    //si on a une erreur lors de la récupération de l'heure on rethrow l'erreur à la fonction appelante
     try {
       http.Response response = await http.get(
         Uri.parse(url),
@@ -220,10 +227,15 @@ class _WidgetToDoState extends State<WidgetTodo> {
     }
   }
 
+  ///Permet de définir l'animation à jouer pour la météo en fonction de la météo et de l'heure
+  ///géographique de l'adresse fournie
   Future<String> weatherAnimation(String? condition) async {
     String res = 'assets/';
 
+    //Par défaut retourner un soleil
     if (condition == null) return 'assets/sunny.json';
+    //Vérification de l'heure et ajout de 'n' dans res pour prendre les images de nuit
+    //On ne retourne rien dans le catch car on veut juste ignorer les erreurs
     if (_weather != null) {
       try {
         DateTime timeZone = await timeByLocation(
@@ -234,7 +246,8 @@ class _WidgetToDoState extends State<WidgetTodo> {
       }catch(e){}
     }
 
-    switch (condition?.toLowerCase()) {
+    //ajout de la condition météo
+    switch (condition.toLowerCase()) {
       case 'mist':
       case 'smoke':
       case 'haze':
@@ -260,10 +273,12 @@ class _WidgetToDoState extends State<WidgetTodo> {
     return res;
   }
 
+  ///Fonction retournant une liste de widgets en fonction des données ajouté à la tache
   Widget setWidgetDetail(Weather? _weather) {
+    //Liste de widget retourné en fonction des données que la tâche comprend.
+    //Si une donnée est vide on ne l'ajoute pas à la liste
     List<Widget> widgetsList = [];
     double mapSize = min(MediaQuery.of(context).size.width * 0.5, MediaQuery.of(context).size.height * 0.5);
-
     if (widget.todo.description != "") {
       widgetsList.add(
         RichText(
@@ -282,6 +297,7 @@ class _WidgetToDoState extends State<WidgetTodo> {
         ),
       );
     }
+    //Ajout de la date à la liste de widget
     if (widget.todo.getDate() != ""){
       widgetsList.add(
         RichText(
@@ -300,13 +316,14 @@ class _WidgetToDoState extends State<WidgetTodo> {
         ),
       );
     }
+    //Ajoute l'adresse à la liste de widget
     if(widget.todo.address != ""){
       widgetsList.add(
         RichText(
           text: TextSpan(
             children: [
               TextSpan(
-                text: 'Ville: ',
+                text: 'Adresse: ',
                 style: TextStyle(fontWeight: FontWeight.bold, color: AppColor().textColor()),
               ),
               TextSpan(
@@ -318,6 +335,8 @@ class _WidgetToDoState extends State<WidgetTodo> {
         ),
       );
     }
+    //Ajoute du widget map à la liste de widget et mise au point d'un curseur en fonction de la coordonnée
+    //gps choisi
     if(_weather != null && _weather.lon != 0 && _weather.lat != 0){
       widgetsList.add(const SizedBox(height: 16),);
       widgetsList.add(
@@ -355,6 +374,7 @@ class _WidgetToDoState extends State<WidgetTodo> {
                     ]),
                   ],
                 ),
+                //Bouton permettant d'aller sur la map en pleine écran
                 Positioned(
                   bottom: 5,
                   right: 5,
@@ -371,6 +391,7 @@ class _WidgetToDoState extends State<WidgetTodo> {
                 ),
               ])
             ),
+            //affichage de l'icone de météo
             SizedBox(
               height: 80,
               width: 80,
@@ -388,6 +409,7 @@ class _WidgetToDoState extends State<WidgetTodo> {
                 },
               ),
             ),
+            //Affichage des température
             Text("Actuel: ${_weather.temp ?? 0}°C",
               softWrap: true,
               style: TextStyle(fontWeight: FontWeight.bold, color: AppColor().textColor()),
@@ -401,11 +423,12 @@ class _WidgetToDoState extends State<WidgetTodo> {
         ),
       );
     }
-
+    //Si juste un titre est enregistré on retourne un message d'erreur
     if(widgetsList.isEmpty){
       return Text("Vous n'avez pas encore édité cette activité. \n"
           "Une fois cela fait, vous aurez toutes les informations renseignées qui apparaîtront ici.", style: TextStyle(color: AppColor().textColor()),);
     }
+    //sinon on retourne la liste des différents widget remplis
     else {
       return Column(
         mainAxisSize: MainAxisSize.min,
@@ -415,6 +438,7 @@ class _WidgetToDoState extends State<WidgetTodo> {
     }
   }
 
+  //Affichage du popup de détail des taches en fonction des données ajouté
   Future todoDetail() async {
     await updateTodoDetail();
     return showDialog(
@@ -446,6 +470,7 @@ class _WidgetToDoState extends State<WidgetTodo> {
     );
   }
 
+  ///Pour la mise à jour d'une tache après son édition
   Future<void> updateTodoDetail() async {
     try {
       final updatedTodo = await TodoList().getTodo(widget.todo, widget.refresh);
@@ -458,7 +483,7 @@ class _WidgetToDoState extends State<WidgetTodo> {
       print(e);
     }
   }
-
+  ///Fonction passé en paramêtre au widget d'edition pour la mise à jour des taches
   void affichage()async{
     setState((){
       updateTodoDetail();

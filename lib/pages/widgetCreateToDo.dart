@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:projet_todo_list/models/colors.dart';
 import 'package:projet_todo_list/models/todoList.dart';
 
+///Gestion du champ de création de nouvelle tâche
 class WidgetCreateToDo extends StatefulWidget {
   final Function() refresh;
   const WidgetCreateToDo({Key? key, required this.refresh}) : super(key: key);
@@ -16,6 +17,7 @@ class _WidgetCreateToDoState extends State<WidgetCreateToDo> {
   @override
   Widget build(BuildContext context) {
     return (Row(children: [
+      //Champ de saisi pour le titre de la tâche
       Expanded(
         child: Container(
             alignment: Alignment.bottomCenter,
@@ -32,6 +34,7 @@ class _WidgetCreateToDoState extends State<WidgetCreateToDo> {
             )
         ),
       ),
+      //Bouton de validation de la tâche
       Container(
         alignment: Alignment.bottomRight,
         margin: const EdgeInsets.only(
@@ -56,15 +59,19 @@ class _WidgetCreateToDoState extends State<WidgetCreateToDo> {
     ]));
   }
 
+  ///Gere la création d'une nouvelle tâche
   void creerTache() {
     String titre = textController.text;
+    //Réinitialisation du champ de saisi après ajout de la tache dans la liste
     if (titre.isNotEmpty) {
       TodoList().add(titre, widget.refresh);
       titre = "";
       setState(() {
         textController.clear();
       });
-    } else {
+    }
+    //Si le champ est vide et que l'utilisateur veut ajouter un tache alors on ouvre une popup d'erreur
+    else {
       showDialog(
           barrierDismissible: true,
           context: context,

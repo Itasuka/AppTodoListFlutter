@@ -11,6 +11,7 @@ import 'package:projet_todo_list/models/todoList.dart';
 import '../models/colors.dart';
 import '../models/todo.dart';
 
+///Page d'édition des tâches
 class WidgetEditTodo extends StatefulWidget {
   final Todo todo;
   final Function() refresh;
@@ -30,6 +31,7 @@ class _WidgetEditTodoState extends State<WidgetEditTodo> {
   late DateTime? _date;
   String _cityValidationMessage = '';
 
+  ///Initialisation des champs avec les valeurs de la tâche
   @override
   void initState() {
     super.initState();
@@ -39,6 +41,7 @@ class _WidgetEditTodoState extends State<WidgetEditTodo> {
     _date = widget.todo.date;
   }
 
+  ///Pour liberer la mémoire une fois que l'on retourne à la page d'avant
   @override
   void dispose() {
     _title.dispose();
@@ -49,7 +52,7 @@ class _WidgetEditTodoState extends State<WidgetEditTodo> {
 
   @override
   Widget build(BuildContext context) {
-
+    //mise en page de la nouvelle page pour l'édition de la tâche
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         home: Scaffold(
@@ -68,9 +71,11 @@ class _WidgetEditTodoState extends State<WidgetEditTodo> {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10.0),
               child: Form(
-                key: _formKey, // Clé unique du formulaire
+                // Clé unique du formulaire
+                key: _formKey,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  //Les différents champs de la pages
                   children: [
                     TextFormField(
                       controller: _title,
@@ -125,28 +130,27 @@ class _WidgetEditTodoState extends State<WidgetEditTodo> {
                           fontSize: 16.0,
                           fontWeight: FontWeight.bold,
                         ),
+                        //Gestion du bouton de géolocalisation
                         suffixIcon: IconButton(
                           onPressed: () async {
+                            //Récupération de la latitude et longitude de l'appareil
                             Position? position = await _getCurrentLocation();
                             if (position != null) {
+                              //Sonvertion de la position en adresse
                               String address = await _getAddressFromLatLng(position.latitude, position.longitude);
                               setState(() {
                                 _city.text = address;
                                 _cityValidationMessage = '';
                               });
-                            } else {
+                            }
+                            //Si problème de géolocalisation
+                            else {
                               _cityValidationMessage = 'Impossible de récupérer la position géographique actuelle';
                             }
                           },
                           icon: Icon(Icons.my_location, color: AppColor().textColor(),),
                         ),
                       ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Veuillez saisir une adresse';
-                        }
-                        return null;
-                      },
                       inputFormatters: [
                         LengthLimitingTextInputFormatter(100),
                       ],
@@ -186,15 +190,19 @@ class _WidgetEditTodoState extends State<WidgetEditTodo> {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColor().buttonColor(),
                         ),
+                        //vérification de la validité des champs avant d'ajouter et quitter la page
                         onPressed: () async {
+                          //Vérifie si tous les champs sont complétement remplis
                           if (_formKey.currentState!.validate()) {
                             bool isAddressValid = await TodoList().checkAdressAvailability(_city.text);
-                            if (!isAddressValid) {
+                            //Si l'adresse n'existe pas on retourne une erreur et on reste sur le même widget
+                            if (!isAddressValid && _city.text.isNotEmpty) {
                               setState(() {
                                 _cityValidationMessage = 'Adresse non valide';
                               });
                               return;
                             }
+                            //sinon on upgrade la tâche
                             TodoList().update(
                                 widget.todo,
                                 _title.text,
@@ -218,15 +226,16 @@ class _WidgetEditTodoState extends State<WidgetEditTodo> {
     );
   }
 
+  /// Pour avoir la position GPS de l'appareil
   Future<Position?> _getCurrentLocation() async {
     bool serviceEnabled;
     LocationPermission permission;
-
+    //On regarde si on peut utiliser le gps
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
       return null;
     }
-
+    //Pour vérifier les permissions et si elle ne sont pas donner on demande à l'utilisateur
     permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
@@ -234,25 +243,28 @@ class _WidgetEditTodoState extends State<WidgetEditTodo> {
         return null;
       }
     }
-
+    //Dans le cas où l'utilisateur refuse
     if (permission == LocationPermission.deniedForever) {
       return null;
     }
-
     return await Geolocator.getCurrentPosition();
   }
 
+  ///Converti des coordonnées en adresse
   Future<String> _getAddressFromLatLng(double latitude, double longitude) async {
+    //Demande d'existance ou non de la position
     final response = await http.get(
       Uri.parse('https://nominatim.openstreetmap.org/reverse?lat=$latitude&lon=$longitude&format=json'),
     );
-
+    //si on trouve une adresse on la retourne
     if (response.statusCode == 200) {
       Map<String, dynamic> jsonResponse = json.decode(response.body);
       String address = jsonResponse['display_name'];
       return address;
-    } else {
-      throw Exception('Failed to load address');
+    }
+    //sinon on retourne une erreur
+    else {
+      throw Exception('Impossible de trouver une adresse');
     }
   }
 }

@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 
 import 'weather.dart';
 
-//Classe représantant les taches
+///Classe représantant les taches
 class Todo {
   int id = 0;
   String title = "";
@@ -29,7 +29,7 @@ class Todo {
     required this.lon,
   });
 
-  //Permet de construire une tache depuis la BDD
+  ///Permet de construire une tache depuis la BDD
   factory Todo.fromDatabase(Map<String, dynamic> map) => Todo.db(
     id: map['id']?.toInt() ?? 0,
     title: map['title'] ?? '',
@@ -44,7 +44,7 @@ class Todo {
     lon: map['lon'] ?? 0.0,
   );
 
-  //Recuperation de la date convertie en string
+  ///Recuperation de la date convertie en string
   String getDate() {
     if(date == null) {
       return "";
@@ -52,7 +52,7 @@ class Todo {
     return DateFormat('dd/MM/yyyy').format(date as DateTime);
   }
 
-  //retourne l'objet weather lié à la tache
+  ///retourne l'objet weather lié à la tache
   Future<Weather> getWeather() async{
     String baseUrl = 'https://api.openweathermap.org/data/2.5/weather';
     String apiKey = '9ad79100fdf5b50dcb1b0e38caa4be33';
@@ -65,6 +65,5 @@ class Todo {
     else{
       throw Exception('Impossible de trouver la météo');
     }
-
   }
 }

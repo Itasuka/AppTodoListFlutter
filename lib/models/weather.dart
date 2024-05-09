@@ -17,6 +17,7 @@ class Weather{
     required this.lat,
     required this.condition});
 
+  //Création d'un objet weather à partir d'un fichier json fourni par l'api de météo
   factory Weather.fromJson(Map<String, dynamic> json, double lat, double lon){
     return Weather(
       city: json['name'],

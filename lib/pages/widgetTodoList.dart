@@ -5,6 +5,7 @@ import 'package:projet_todo_list/models/todoList.dart';
 
 import '../models/colors.dart';
 
+///Gestion de l'ensemble de l'affichage de l'application
 class WidgetTodoList extends StatefulWidget {
   WidgetTodoList({Key? key}) : super(key: key);
 
@@ -19,11 +20,6 @@ class _WidgetTodoListState extends State<WidgetTodoList> {
   @override
   void initState() {
     super.initState();
-    todoList.initialisation(affichage);
-  }
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
     todoList.initialisation(affichage);
   }
 
@@ -46,6 +42,7 @@ class _WidgetTodoListState extends State<WidgetTodoList> {
     );
   }
 
+  ///Fonction de rafraichissement de l'affichage de la liste de tâche utilisés par les fonctions fils
   void affichage() {
     setState(() {
       _widgetTodoList = todoList.afficherList(affichage);

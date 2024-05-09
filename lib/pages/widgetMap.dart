@@ -6,6 +6,7 @@ import 'package:latlong2/latlong.dart';
 import '../models/colors.dart';
 import '../models/weather.dart';
 
+///Affichage de la map en plein écran sur un nouveau widget
 class WidgetMap extends StatelessWidget {
   final Weather weather;
   final String title;

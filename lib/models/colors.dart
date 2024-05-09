@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-//Palette de couleur de l'application
+///Palette de couleur de l'application de type singleton
 class AppColor {
   static final AppColor _instance = AppColor.internal();
   late SharedPreferences prefs;
-  late ValueNotifier<bool> _themeNotifier;
-  bool _darkmode = true;
+  bool _darkmode = false;
 
   factory AppColor() {
     return _instance;
@@ -16,24 +15,24 @@ class AppColor {
     init();
   }
 
+  ///Recupere les options de trie de l'application enregistrées dans des sharedPreferences
   Future<void> init() async {
     prefs = await SharedPreferences.getInstance();
     _darkmode = prefs.getBool('darkmode') ?? true;
-    _themeNotifier = ValueNotifier<bool>(_darkmode);
   }
 
+  ///Permet de changer la valeur du theme à afficher
   Future<void> setTheme(bool val) async {
     _darkmode = val;
     await prefs.setBool('darkmode', _darkmode);
-    _themeNotifier.value = _darkmode; // Notifie les écouteurs du changement de thème
   }
 
+  ///Retourne le theme actuellement choisi
   bool getTheme() {
     return _darkmode;
   }
 
-  ValueNotifier<bool> get themeNotifier => _themeNotifier;
-
+  //Définition de toutes les couleurs de l'application en fonction du theme
   Color textColor(){return _darkmode ? Colors.white : Colors.black;}
   Color textTodo(){return Colors.black;}
   Color backgroundColor(){return const Color.fromARGB(255, 245, 245, 245);}

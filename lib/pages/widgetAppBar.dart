@@ -3,11 +3,13 @@ import 'package:projet_todo_list/models/todoList.dart';
 
 import '../models/colors.dart';
 
+//Affichage de la barre supérieur de l'application
 class WidgetAppBar extends StatelessWidget implements PreferredSizeWidget{
   WidgetAppBar({Key? key, required this.refresh}) : super(key: key);
   final TodoList todoList = TodoList();
   final Function() refresh;
 
+  //taille en hauteur de l'appbar
   @override
   Size get preferredSize => const Size.fromHeight(50.0);
 
@@ -31,6 +33,7 @@ class WidgetAppBar extends StatelessWidget implements PreferredSizeWidget{
     );
   }
 
+  ///Définition de la popup de parametrage de l'application
   Future parameterPopUp(BuildContext context) async{
     bool sortByFavorites = todoList.getFavorites();
     bool theme = AppColor().getTheme();
@@ -46,6 +49,7 @@ class WidgetAppBar extends StatelessWidget implements PreferredSizeWidget{
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
+                //Ajout du corp de la popup
                 children: <Widget>[
                   Text("Trier par: ", style: TextStyle(color: AppColor().textColor())),
                   RadioListTile(
@@ -89,9 +93,13 @@ class WidgetAppBar extends StatelessWidget implements PreferredSizeWidget{
                 ),
                 TextButton(
                   onPressed: () {
+                    //Change le booléen de TodoList pour le trie s'il est changé dans les options
                     TodoList().setOrder();
+                    //Change le booléen de AppColor si l'utilisateur veut changer le théme
                     AppColor().setTheme(theme);
+                    //Rafraichi l'affichage du widgetTodoList
                     refresh();
+                    //Ferme la popup
                     Navigator.of(context).pop();
                   },
                   child: const Text('Valider'),
