@@ -31,6 +31,7 @@ class _WidgetCreateToDoState extends State<WidgetCreateToDo> {
                 hintText: "Titre de la tâche",
                 hintStyle: TextStyle(color: AppColor().textColor()),
               ),
+              style: TextStyle(color: AppColor().textColor()),
             )
         ),
       ),
@@ -77,30 +78,36 @@ class _WidgetCreateToDoState extends State<WidgetCreateToDo> {
           context: context,
           builder: (context) {
             return Dialog(
+              backgroundColor: AppColor().background(),
               child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
+                  Text(
                     'Attention',
                     style: TextStyle(
+                      color: AppColor().textColor(),
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   const SizedBox(height: 10),
-                  const Text(
+                  Text(
                     'Vous devez d\'abord entrer un titre !',
-                    style: TextStyle(fontSize: 16),
+                    style: TextStyle(fontSize: 16,
+                      color: AppColor().textColor()),
                   ),
                   const SizedBox(height: 20),
                   ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColor().buttonColor(),
+                    ),
                     onPressed: () {
                       Navigator.of(context).pop(); // Ferme le dialog
                     },
-                    child: const Text('OK'),
+                    child: Text('OK', style: TextStyle(color: AppColor().insideButtonColor())),
                   ),
                 ],
               ),

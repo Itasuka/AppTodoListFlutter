@@ -53,6 +53,7 @@ class WidgetAppBar extends StatelessWidget implements PreferredSizeWidget{
                 children: <Widget>[
                   Text("Trier par: ", style: TextStyle(color: AppColor().textColor())),
                   RadioListTile(
+                    activeColor: AppColor().buttonColor(),
                     title: Text("Favoris", style: TextStyle(color: AppColor().textColor()),),
                     value: true,
                     groupValue: sortByFavorites,
@@ -63,6 +64,7 @@ class WidgetAppBar extends StatelessWidget implements PreferredSizeWidget{
                     },
                   ),
                   RadioListTile(
+                    activeColor: AppColor().buttonColor(),
                     title: Text("Date", style: TextStyle(color: AppColor().textColor()),),
                     value: true,
                     groupValue: !sortByFavorites,
@@ -75,6 +77,7 @@ class WidgetAppBar extends StatelessWidget implements PreferredSizeWidget{
                   const SizedBox(height: 20),
                   Text("Theme: ", style: TextStyle(color: AppColor().textColor())),
                   Switch(
+                    activeColor: AppColor().buttonColor(),
                     value: theme,
                     onChanged: (value) {
                       setState((){
@@ -85,13 +88,19 @@ class WidgetAppBar extends StatelessWidget implements PreferredSizeWidget{
                 ],
               ),
               actions: <Widget>[
-                TextButton(
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColor().buttonColor(),
+                  ),
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  child: const Text('Annuler'),
+                  child: Text('Annuler', style: TextStyle(color: AppColor().insideButtonColor())),
                 ),
-                TextButton(
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColor().buttonColor(),
+                  ),
                   onPressed: () {
                     //Change le booléen de TodoList pour le trie s'il est changé dans les options
                     TodoList().setOrder();
@@ -102,7 +111,7 @@ class WidgetAppBar extends StatelessWidget implements PreferredSizeWidget{
                     //Ferme la popup
                     Navigator.of(context).pop();
                   },
-                  child: const Text('Valider'),
+                  child: Text('Valider', style: TextStyle(color: AppColor().insideButtonColor())),
                 ),
               ],
             );
