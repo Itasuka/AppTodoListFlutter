@@ -258,7 +258,7 @@ class _WidgetEditTodoState extends State<WidgetEditTodo> {
     //si on trouve une adresse on la retourne
     if (response.statusCode == 200) {
       Map<String, dynamic> jsonResponse = json.decode(response.body);
-      String address = jsonResponse['display_name'];
+      String address = jsonResponse['address']['road'] + " " + jsonResponse['address']['city'] + " " + jsonResponse['address']['country'];
       return address;
     }
     //sinon on retourne une erreur
